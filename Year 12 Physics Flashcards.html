@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Physics 3 &amp; 4 — Flashcards</title>
+<meta name="description" content="Spaced-repetition flashcards for QCAA Physics 2025 Units 3 and 4.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+Condensed:wght@400;500;600;700&family=IBM+Plex+Serif:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous">
+<style>
+:root{
+  --paper:#E7ECF1;
+  --paper-2:#DCE3EB;
+  --card:#FCFCFB;
+  --ink:#14213A;
+  --ink-soft:#5C6C86;
+  --ink-faint:#8A97AA;
+  --rule:#C2CDDA;
+  --rule-soft:#D6DEE7;
+  --signal:#B8432A;
+  --phos:#0D7268;
+  --gold:#9A6B1F;
+  --sans:"IBM Plex Sans Condensed",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --serif:"IBM Plex Serif",Georgia,"Times New Roman",serif;
+  --mono:"IBM Plex Mono",ui-monospace,"SF Mono",Menlo,monospace;
+  --shadow:0 1px 0 rgba(20,33,58,.06), 0 10px 30px -18px rgba(20,33,58,.5);
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:var(--paper);
+  background-image:
+    linear-gradient(var(--rule-soft) 1px, transparent 1px),
+    linear-gradient(90deg, var(--rule-soft) 1px, transparent 1px);
+  background-size:28px 28px;
+  color:var(--ink);
+  font-family:var(--sans);
+  font-size:16px;
+  line-height:1.5;
+  -webkit-text-size-adjust:100%;
+  min-height:100dvh;
+}
+.wrap{max-width:760px;margin:0 auto;padding:14px 14px 40px;}
+
+/* ---------- masthead ---------- */
+.mast{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;
+  border-bottom:2px solid var(--ink);padding-bottom:8px;margin-bottom:12px}
+.mast h1{font-size:19px;letter-spacing:.04em;text-transform:uppercase;font-weight:700;margin:0}
+.mast .sub{font-family:var(--mono);font-size:11px;color:var(--ink-soft);letter-spacing:.06em;text-transform:uppercase}
+.streak{margin-left:auto;font-family:var(--mono);font-size:12px;letter-spacing:.04em;
+  color:var(--ink);white-space:nowrap;display:flex;align-items:center;gap:6px}
+.streak b{font-size:16px;font-weight:600}
+.streak .flame{width:9px;height:9px;border-radius:50%;background:var(--rule);display:inline-block}
+.streak.live .flame{background:var(--signal);box-shadow:0 0 0 3px rgba(184,67,42,.16)}
+
+/* ---------- signature: Leitner rail ---------- */
+.rail{margin:0 0 14px}
+.rail-head{display:flex;justify-content:space-between;align-items:baseline;
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--ink-soft);margin-bottom:6px}
+.slots{display:grid;grid-template-columns:repeat(5,1fr);gap:5px}
+.slot{position:relative;height:46px;background:var(--paper-2);border:1px solid var(--rule);
+  overflow:hidden;display:flex;align-items:flex-end;justify-content:center}
+.slot .fill{position:absolute;left:0;right:0;bottom:0;background:var(--ink);opacity:.11;
+  transition:height .45s cubic-bezier(.2,.7,.2,1)}
+.slot[data-b="5"] .fill{background:var(--phos);opacity:.3}
+.slot .n{position:relative;font-family:var(--mono);font-size:13px;font-weight:600;padding-bottom:4px}
+.slot .lab{position:absolute;top:4px;left:0;right:0;text-align:center;
+  font-family:var(--mono);font-size:9px;letter-spacing:.08em;color:var(--ink-faint)}
+.slot.pulse{animation:tick .5s ease}
+@keyframes tick{0%{transform:translateY(0)}35%{transform:translateY(-5px)}100%{transform:translateY(0)}}
+
+/* ---------- filters ---------- */
+.filters{display:flex;flex-wrap:wrap;gap:5px;margin:0 0 14px}
+.chip{font-family:var(--mono);font-size:11px;letter-spacing:.03em;padding:5px 9px;
+  border:1px solid var(--rule);background:transparent;color:var(--ink-soft);
+  cursor:pointer;border-radius:2px;white-space:nowrap}
+.chip[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--paper)}
+.chip:focus-visible,.btn:focus-visible,.mini:focus-visible{outline:2px solid var(--signal);outline-offset:2px}
+
+/* ---------- card ---------- */
+.stage{perspective:1400px;margin-bottom:12px}
+.card{background:var(--card);border:1px solid var(--rule);box-shadow:var(--shadow);
+  padding:20px 18px 18px;min-height:280px;display:flex;flex-direction:column;
+  position:relative;transition:transform .28s ease, opacity .28s ease}
+.card.flipping{transform:rotateY(4deg) translateZ(0);opacity:.35}
+.card::after{content:"";position:absolute;right:9px;bottom:9px;width:11px;height:11px;
+  border-right:1px solid var(--rule);border-bottom:1px solid var(--rule)}
+.card::before{content:"";position:absolute;left:9px;top:9px;width:11px;height:11px;
+  border-left:1px solid var(--rule);border-top:1px solid var(--rule)}
+.meta{display:flex;justify-content:space-between;align-items:center;gap:8px;
+  font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--ink-faint);border-bottom:1px solid var(--rule-soft);padding-bottom:8px;margin-bottom:14px}
+.meta .topic{color:var(--ink-soft);font-weight:500}
+.meta .box{color:var(--ink-faint)}
+.q{font-family:var(--serif);font-size:19px;line-height:1.42;margin:0 0 4px}
+.q .blank{display:inline-block;min-width:74px;border-bottom:2px solid var(--signal);
+  vertical-align:baseline;height:1.05em}
+.q .filled{color:var(--signal);font-weight:600;font-style:normal}
+.fig{margin:16px 0 4px;text-align:center;color:var(--ink)}
+.fig svg{max-width:100%;height:auto;display:inline-block}
+.a{margin-top:16px;padding-top:14px;border-top:1px dashed var(--rule);
+  font-family:var(--sans);font-size:16.5px;line-height:1.55}
+.a strong{font-weight:600}
+.a ul{margin:8px 0 0;padding-left:18px}
+.a li{margin-bottom:4px}
+.note{margin-top:12px;padding:9px 11px;background:rgba(184,67,42,.07);
+  border-left:2px solid var(--signal);font-size:14px;line-height:1.45;color:var(--ink)}
+.note b{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--signal);display:block;margin-bottom:3px;font-weight:600}
+.spacer{flex:1}
+.flagbtn{align-self:flex-start;margin-top:14px;font-family:var(--mono);font-size:10.5px;
+  letter-spacing:.06em;text-transform:uppercase;background:none;border:1px solid var(--rule-soft);
+  color:var(--ink-faint);padding:4px 9px;border-radius:2px;cursor:pointer}
+.flagbtn:hover{border-color:var(--rule);color:var(--ink-soft)}
+.flagbtn.on{border-color:var(--signal);color:var(--signal);background:rgba(184,67,42,.07)}
+.flagbtn:focus-visible{outline:2px solid var(--signal);outline-offset:2px}
+
+/* ---------- controls ---------- */
+.controls{display:grid;gap:8px}
+.btn{font-family:var(--sans);font-size:15px;font-weight:600;letter-spacing:.02em;
+  padding:14px 16px;border:1px solid var(--ink);background:var(--ink);color:var(--paper);
+  cursor:pointer;border-radius:2px;width:100%}
+.btn.ghost{background:transparent;color:var(--ink)}
+.grade{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.btn.miss{background:var(--signal);border-color:var(--signal)}
+.btn.got{background:var(--phos);border-color:var(--phos)}
+.btn kbd{font-family:var(--mono);font-size:10px;opacity:.7;font-weight:400;margin-left:6px}
+.btn:active{transform:translateY(1px)}
+
+/* ---------- footer bar ---------- */
+.bar{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:16px;
+  padding-top:10px;border-top:1px solid var(--rule);
+  font-family:var(--mono);font-size:11px;color:var(--ink-soft);flex-wrap:wrap}
+.mini{font-family:var(--mono);font-size:11px;background:none;border:none;
+  color:var(--ink-soft);text-decoration:underline;cursor:pointer;padding:4px 0}
+.mini.danger{color:var(--signal)}
+
+/* ---------- empty state ---------- */
+.empty{text-align:center;padding:34px 12px}
+.empty h2{font-family:var(--sans);font-size:17px;text-transform:uppercase;letter-spacing:.06em;margin:0 0 8px}
+.empty p{color:var(--ink-soft);font-size:15px;margin:0 auto 16px;max-width:44ch}
+.empty .btn{max-width:280px;margin:0 auto}
+
+@media (min-width:620px){
+  .wrap{padding:24px 20px 56px}
+  .mast h1{font-size:22px}
+  .q{font-size:21px}
+  .card{padding:26px 26px 22px}
+  .slot{height:56px}
+}
+@media (prefers-reduced-motion:reduce){
+  *{animation:none!important;transition:none!important}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="mast">
+    <h1>Physics 3 &amp; 4</h1>
+    <span class="sub">QCAA 2025 v1.3</span>
+    <span class="streak" id="streak"><span class="flame"></span><b id="streakN">0</b> day streak</span>
+  </header>
+
+  <section class="rail" aria-label="Leitner boxes">
+    <div class="rail-head"><span>Leitner boxes</span><span id="dueLine">—</span></div>
+    <div class="slots" id="slots"></div>
+  </section>
+
+  <nav class="filters" id="filters" aria-label="Topic filter"></nav>
+
+  <main class="stage" id="stage"></main>
+
+  <div class="controls" id="controls"></div>
+
+  <div class="bar">
+    <span id="counter">—</span>
+    <button class="mini" id="flagBtn" style="display:none"></button>
+    <button class="mini" id="shuffleBtn">Shuffle</button>
+    <button class="mini danger" id="resetBtn">Reset progress</button>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+<script id="deck" type="text/plain">
+g|qa|How do you resolve a velocity $v$ launched at angle $\theta$ above the horizontal into components?|$u_x = v\cos\theta$ and $u_y = v\sin\theta$. The horizontal component uses cosine because it is adjacent to the launch angle.|Only true when $\theta$ is measured from the horizontal. If the angle is given from the vertical, cos and sin swap.
+g|cloze|In projectile motion (no drag), the horizontal and vertical components of velocity are [[independent]] of each other.|They share only one variable: time. Solve the vertical problem for $t$, then feed that $t$ into the horizontal problem.|
+g|qa|Why is horizontal velocity constant for a projectile when drag is ignored?|There is no horizontal force acting, so $a_x = 0$ and $v_x = u_x$ throughout the flight. Gravity acts vertically only.|
+g|qa|What is the vertical velocity of a projectile at maximum height?|Zero. The vertical component has been decelerated to nothing by gravity — but the horizontal component is unchanged, so the projectile is still moving.|Speed at the top is not zero. It equals $u_x$.
+g|qa|What is the acceleration of a projectile at the highest point of its trajectory?|$9.8\ \text{m s}^{-2}$ downwards — unchanged. Acceleration is constant for the whole flight, including the instant velocity is horizontal.|Very common error: assuming $a = 0$ where $v_y = 0$.
+g|svg|Label the velocity components of this projectile at launch and at the peak.|At launch: $u_x = u\cos\theta$ (horizontal), $u_y = u\sin\theta$ (vertical). At the peak: $v_x = u_x$, $v_y = 0$. The horizontal arrow is the same length everywhere on the path.||<svg viewBox="0 0 320 170" xmlns="http://www.w3.org/2000/svg" role="img"><path d="M20 150 Q160 5 300 150" fill="none" stroke="currentColor" stroke-width="1.6" opacity=".45" stroke-dasharray="4 3"/><line x1="10" y1="150" x2="310" y2="150" stroke="currentColor" stroke-width="1.2"/><g stroke="var(--signal)" stroke-width="2" fill="none"><line x1="20" y1="150" x2="72" y2="150"/><polygon points="72,150 66,147 66,153" fill="var(--signal)" stroke="none"/><line x1="20" y1="150" x2="20" y2="100"/><polygon points="20,100 17,106 23,106" fill="var(--signal)" stroke="none"/><line x1="20" y1="150" x2="72" y2="100" stroke-dasharray="3 3" opacity=".6"/></g><g stroke="var(--signal)" stroke-width="2"><line x1="160" y1="42" x2="212" y2="42"/><polygon points="212,42 206,39 206,45" fill="var(--signal)" stroke="none"/></g><text x="44" y="166" font-size="11" font-family="monospace" fill="currentColor">ux</text><text x="2" y="126" font-size="11" font-family="monospace" fill="currentColor">uy</text><text x="182" y="34" font-size="11" font-family="monospace" fill="currentColor">vx</text><text x="150" y="60" font-size="11" font-family="monospace" fill="currentColor">vy = 0</text><text x="30" y="140" font-size="11" font-family="monospace" fill="currentColor">th</text></svg>
+g|qa|State the four kinematic relationships used for projectiles.|Vertical: $v_y = u_y + gt$, $s_y = u_yt + \tfrac{1}{2}gt^2$, $v_y^2 = u_y^2 + 2gs_y$. Horizontal: $s_x = u_xt$ with $v_x = u_x$.|
+g|qa|For a projectile launched and landing at the same height, at what angle is range greatest?|$45^\circ$. Range depends on $\sin 2\theta$, which peaks when $2\theta = 90^\circ$.|
+g|qa|Why do launch angles of $30^\circ$ and $60^\circ$ give the same range?|They are complementary — $\sin 2\theta$ has the same value for both. The $60^\circ$ shot goes higher and stays in the air longer but travels slower horizontally; the two effects cancel.|
+g|calc|A ball is launched at $40^\circ$. Without calculating, is its time of flight longer or shorter than an identical ball launched at $50^\circ$ with the same speed?|Shorter. Time of flight depends only on $u_y = u\sin\theta$, and $\sin 50^\circ > \sin 40^\circ$. Both have the same range, but the steeper shot hangs longer.|
+g|qa|How does the flight of a projectile change if it is launched from a cliff rather than level ground?|The path is no longer symmetric. It spends longer descending than ascending, and it lands with a greater speed than it was launched with.|
+g|qa|A projectile returns to its launch height. How does its landing speed compare to launch speed?|Identical in magnitude, with the vertical component reversed in direction. Energy is conserved when drag is neglected.|
+g|cloze|The trajectory of a projectile with no drag is a [[parabola]], because vertical displacement depends on $t^2$ while horizontal displacement depends on $t$.|Eliminating $t$ between $s_x = u_xt$ and $s_y = u_yt + \tfrac12 gt^2$ gives $s_y$ as a quadratic in $s_x$.|
+g|qa|Two balls: one dropped, one fired horizontally from the same height at the same instant. Which lands first?|They land together. Both start with $u_y = 0$ and experience the same vertical acceleration; horizontal motion has no effect on fall time.|
+g|qa|Write the relationship for the force due to gravity (weight) on a mass near Earth's surface.|$F_g = mg$, directed vertically downwards toward the centre of the Earth, where $g$ is the local gravitational field strength.|
+g|qa|Define the normal force.|The contact force exerted by a surface on an object, acting perpendicular to that surface. It is a reaction to the object pressing into the surface.|Normal means perpendicular, not usual.
+g|svg|On an incline of angle $\theta$, what are the components of weight parallel and perpendicular to the surface?|Parallel (down the slope): $mg\sin\theta$. Perpendicular (into the slope): $mg\cos\theta$. The normal force balances the perpendicular component, so $N = mg\cos\theta$.|The incline angle appears between the weight vector and the perpendicular to the surface — that is why the parallel component takes sine.|<svg viewBox="0 0 320 180" xmlns="http://www.w3.org/2000/svg" role="img"><polygon points="20,155 290,155 290,45" fill="none" stroke="currentColor" stroke-width="1.5"/><rect x="188" y="78" width="34" height="22" transform="rotate(-22 205 89)" fill="none" stroke="currentColor" stroke-width="1.5"/><g stroke="var(--signal)" stroke-width="2" fill="none"><line x1="205" y1="89" x2="205" y2="146"/><polygon points="205,150 201,142 209,142" fill="var(--signal)" stroke="none"/><line x1="205" y1="89" x2="182" y2="124" stroke-dasharray="3 3"/><line x1="205" y1="89" x2="228" y2="111" stroke-dasharray="3 3"/></g><g stroke="var(--phos)" stroke-width="2" fill="none"><line x1="205" y1="89" x2="182" y2="65"/><polygon points="179,62 189,64 185,70" fill="var(--phos)" stroke="none"/></g><text x="210" y="132" font-size="11" font-family="monospace" fill="currentColor">mg</text><text x="146" y="122" font-size="10" font-family="monospace" fill="currentColor">mg sin</text><text x="230" y="110" font-size="10" font-family="monospace" fill="currentColor">mg cos</text><text x="150" y="60" font-size="11" font-family="monospace" fill="currentColor">N</text><path d="M262 155 A32 32 0 0 0 268 133" fill="none" stroke="currentColor" stroke-width="1.2"/><text x="248" y="150" font-size="11" font-family="monospace" fill="currentColor">th</text></svg>
+g|qa|What is the acceleration of a frictionless object released on an incline of angle $\theta$?|$a = g\sin\theta$, directed down the slope. Mass cancels, so all frictionless objects accelerate identically on the same incline.|
+g|qa|Is the normal force always equal to the weight of an object?|No. It equals weight only on a level surface with no other vertical forces. On an incline $N = mg\cos\theta$; in a lift or with an applied vertical force it differs again.|
+g|qa|What forces appear on the free-body diagram of a block sliding down a rough incline?|Weight $mg$ (vertically down), normal force $N$ (perpendicular to the surface), and friction (up the slope, opposing the motion). Any applied force or tension is added as needed.|
+g|qa|How do you find the net force on an object on an inclined plane?|Resolve all forces into axes parallel and perpendicular to the surface. Perpendicular components balance (no motion into the slope), so the net force is the sum of parallel components.|Rotating the axes to match the slope is the whole trick — it removes the need to resolve the normal force.
+g|qa|Define uniform circular motion.|Motion in a circular path at constant speed. Velocity is not constant, because its direction changes continuously, so the object is accelerating.|
+g|qa|Relate orbital speed to radius and period for uniform circular motion.|$v = \dfrac{2\pi r}{T}$ — the circumference divided by the time for one complete revolution.|
+g|qa|Give the relationship for centripetal acceleration and state its direction.|$a_c = \dfrac{v^2}{r}$, directed towards the centre of the circle, perpendicular to the velocity at every instant.|
+g|svg|Sketch the velocity and acceleration vectors for an object in uniform circular motion.|Velocity is tangent to the circle at each point. Acceleration (and net force) points to the centre. The two are always perpendicular.||<svg viewBox="0 0 300 180" xmlns="http://www.w3.org/2000/svg" role="img"><circle cx="150" cy="90" r="62" fill="none" stroke="currentColor" stroke-width="1.4" stroke-dasharray="4 4" opacity=".6"/><circle cx="150" cy="90" r="3" fill="currentColor"/><circle cx="212" cy="90" r="6" fill="currentColor"/><g stroke="var(--signal)" stroke-width="2"><line x1="212" y1="90" x2="212" y2="36"/><polygon points="212,32 208,40 216,40" fill="var(--signal)" stroke="none"/></g><g stroke="var(--phos)" stroke-width="2"><line x1="205" y1="90" x2="166" y2="90"/><polygon points="162,90 170,86 170,94" fill="var(--phos)" stroke="none"/></g><text x="220" y="44" font-size="11" font-family="monospace" fill="currentColor">v</text><text x="172" y="82" font-size="11" font-family="monospace" fill="currentColor">ac</text><line x1="150" y1="90" x2="212" y2="90" stroke="currentColor" stroke-width="1" opacity=".5"/><text x="172" y="106" font-size="10" font-family="monospace" fill="currentColor" opacity=".7">r</text></svg>
+g|qa|Give the relationship for centripetal force.|$F_c = F_{net} = \dfrac{mv^2}{r}$, directed towards the centre.|
+g|qa|Is centripetal force a new kind of force?|No. It is the name for the net force that happens to point to the centre. It is always supplied by a real force — tension, gravity, friction, or a normal force.|Never add a centripetal force to a free-body diagram alongside the real forces. That double-counts it.
+g|calc|An object in uniform circular motion has its speed doubled at fixed radius. What happens to centripetal acceleration?|It quadruples. $a_c \propto v^2$.|
+g|calc|At fixed speed, the radius of a circular path is doubled. What happens to the required centripetal force?|It halves. $F_c \propto 1/r$ at constant $v$.|
+g|qa|A ball on a string is whirled in a horizontal circle. What provides the centripetal force?|The horizontal component of the tension in the string. The vertical component supports the weight, which is why the string cannot be perfectly horizontal.|
+g|qa|How can an object travel at constant speed yet be accelerating?|Acceleration is the rate of change of velocity, and velocity is a vector. Changing direction alone changes velocity, so an object moving in a circle at constant speed accelerates continuously.|
+g|qa|State the Law of Universal Gravitation.|Every mass attracts every other mass with a force proportional to the product of their masses and inversely proportional to the square of the distance between their centres.|
+g|qa|Give the relationship for gravitational force between two masses.|$F = \dfrac{GMm}{r^2}$, where $G$ is the universal gravitational constant (supplied in the data book) and $r$ is measured centre to centre.|$r$ is not the surface separation. For a satellite it is planet radius plus altitude.
+g|calc|The separation between two masses is tripled. What happens to the gravitational force?|It falls to one ninth. $F \propto 1/r^2$.|
+g|qa|Define gravitational field strength and give its two relationships.|The force per unit mass at a point: $g = \dfrac{F}{m} = \dfrac{GM}{r^2}$. Units are $\text{N kg}^{-1}$ (equivalently $\text{m s}^{-2}$).|
+g|qa|Why does gravitational field strength not depend on the mass of the object placed in the field?|The gravitational force is proportional to that mass, so dividing force by mass cancels it. The field is a property of the source mass and the distance alone.|
+g|svg|Sketch the gravitational field lines around a spherical planet.|Radially inward, evenly spaced by angle, and closer together near the surface where the field is stronger. Arrows point towards the centre because gravity is always attractive.||<svg viewBox="0 0 260 200" xmlns="http://www.w3.org/2000/svg" role="img"><circle cx="130" cy="100" r="30" fill="currentColor" opacity=".12" stroke="currentColor" stroke-width="1.4"/><g stroke="var(--signal)" stroke-width="1.6"><line x1="130" y1="20" x2="130" y2="66"/><polygon points="130,70 126,60 134,60" fill="var(--signal)" stroke="none"/><line x1="130" y1="180" x2="130" y2="134"/><polygon points="130,130 126,140 134,140" fill="var(--signal)" stroke="none"/><line x1="50" y1="100" x2="96" y2="100"/><polygon points="100,100 90,96 90,104" fill="var(--signal)" stroke="none"/><line x1="210" y1="100" x2="164" y2="100"/><polygon points="160,100 170,96 170,104" fill="var(--signal)" stroke="none"/><line x1="73" y1="43" x2="107" y2="77"/><polygon points="110,80 100,77 103,70" fill="var(--signal)" stroke="none"/><line x1="187" y1="43" x2="153" y2="77"/><polygon points="150,80 157,70 160,77" fill="var(--signal)" stroke="none"/><line x1="73" y1="157" x2="107" y2="123"/><polygon points="110,120 103,130 100,123" fill="var(--signal)" stroke="none"/><line x1="187" y1="157" x2="153" y2="123"/><polygon points="150,120 160,123 157,130" fill="var(--signal)" stroke="none"/></g></svg>
+g|qa|State Kepler's first law of planetary motion.|Planets move in elliptical orbits with the Sun at one focus.|
+g|qa|State Kepler's second law of planetary motion.|A line joining a planet to the Sun sweeps out equal areas in equal intervals of time. A planet therefore moves fastest when closest to the Sun.|
+g|qa|State Kepler's third law of planetary motion.|The square of the orbital period is proportional to the cube of the orbital radius: $\dfrac{T^2}{r^3}$ is the same constant for every satellite of a given central body.|
+g|qa|Give the full form of Kepler's third law used in this course.|$\dfrac{T_a^2}{r_a^3} = \dfrac{T_b^2}{r_b^3} = \dfrac{4\pi^2}{GM}$, where $M$ is the mass of the central body.|
+g|qa|How is Kepler's third law derived from universal gravitation and circular motion?|Set gravity as the centripetal force: $\dfrac{GMm}{r^2} = \dfrac{mv^2}{r}$. Substitute $v = \dfrac{2\pi r}{T}$ and rearrange to obtain $\dfrac{T^2}{r^3} = \dfrac{4\pi^2}{GM}$.|
+g|qa|What is the orbital speed of a satellite in a circular orbit of radius $r$?|$v = \sqrt{\dfrac{GM}{r}}$, obtained by equating gravitational and centripetal force. It is independent of the satellite mass.|
+g|calc|A satellite is moved to a higher circular orbit. What happens to its speed and its period?|Speed decreases ($v \propto 1/\sqrt{r}$) and period increases ($T \propto r^{3/2}$). Higher orbits are slower and take longer.|
+g|qa|A satellite must stay above a fixed point on the equator. What orbital period does this require, and how would you find the orbital radius?|The period must equal one day, so the satellite keeps pace with Earth's rotation. It must orbit above the equator, in the same direction as the rotation, on a circular path. Rearranging $\dfrac{T^2}{r^3} = \dfrac{4\pi^2}{GM}$ gives $r = \sqrt[3]{\dfrac{GMT^2}{4\pi^2}}$.|
+g|qa|Why do astronauts in orbit appear weightless?|They are in continuous free fall together with the spacecraft. Gravity still acts strongly — it supplies the centripetal force — but there is no normal force, so there is no sensation of weight.|Weightlessness is not the absence of gravity.
+g|qa|How can the mass of a central body be found from the orbit of a satellite?|Rearrange Kepler's third law: $M = \dfrac{4\pi^2 r^3}{GT^2}$. Measuring the radius and period of any one satellite is enough.|
+g|qa|Distinguish mass from weight.|Mass is the scalar amount of matter, measured in kilograms, and is the same everywhere. Weight is the gravitational force on that mass, a vector measured in newtons, which varies with local $g$.|
+g|cloze|Gravitational field strength is a [[vector]] quantity, so fields from two masses at a point must be combined by [[vector addition]].|At a point between two masses the fields oppose, and there is a location where they cancel to zero.|
+g|qa|A satellite orbits Earth. Identify the Newton's third law pair to the gravitational pull of Earth on the satellite.|The gravitational pull of the satellite on the Earth — equal in magnitude, opposite in direction, acting on the other body.|The normal force is never the third law pair to weight. Both act on the same object.
+g|qa|An object is in uniform circular motion. Explain why the net force cannot have a tangential component.|A tangential component would change the speed. Since speed is constant, the net force must be perpendicular to velocity, meaning it points entirely to the centre.|
+g|qa|What is the period of an object in circular motion, and how does it relate to frequency?|The time for one complete revolution. It is the reciprocal of frequency: $T = 1/f$.|
+g|qa|Interpret this observation: a projectile launched at $20^\circ$ and one at $70^\circ$ land at the same spot.|The angles are complementary, so ranges match. The $70^\circ$ shot reached a much greater maximum height and had a much longer flight time.|
+g|qa|Two identical masses are separated by distance $r$. Where between them is the net gravitational field zero?|At the midpoint. For unequal masses the null point sits closer to the smaller mass, where the two field contributions are equal in magnitude and opposite in direction.|
+g|qa|Why is the gravitational force between everyday objects unnoticeable?|$G$ is extremely small — of order $10^{-11}$ in SI units — so appreciable forces require at least one astronomically large mass.|
+g|qa|A car rounds a flat, unbanked bend. What supplies the centripetal force, and what happens if the road is wet?|Static friction between tyres and road. Reduced friction lowers the maximum available centripetal force, so the car can only take the bend at a lower speed before sliding outward.|
+g|qa|Describe how vectors are added by components.|Resolve each vector into perpendicular $x$ and $y$ components, sum the components separately, then recombine with $R = \sqrt{R_x^2 + R_y^2}$ and $\theta = \tan^{-1}(R_y/R_x)$.|
+g|qa|Why must a direction be stated with the magnitude when reporting a resultant vector?|A vector is only fully specified by both. Reporting magnitude alone loses information and is treated as an incomplete answer.|
+g|calc|A projectile has $u_x = 20\ \text{m s}^{-1}$ and a flight time of 4 s. What is its range?|80 m. Horizontal motion is uniform, so $s_x = u_xt$.|
+g|qa|In circular motion problems, why can period be used instead of speed?|Because $v = 2\pi r/T$ links them directly. Substituting gives $a_c = \dfrac{4\pi^2 r}{T^2}$, which is useful when the period is the measured quantity.|
+g|qa|What happens to the direction of centripetal acceleration as an object completes a circle?|It rotates continuously so that it always points at the centre. Its magnitude stays constant in uniform circular motion, but its direction never is.|
+g|qa|Describe how an object on an inclined plane can remain stationary.|Friction up the slope must balance the parallel component of weight: $f = mg\sin\theta$. Once the required friction exceeds the maximum static friction available, the object slides.|
+e|qa|State Coulomb's Law.|The electrostatic force between two point charges is proportional to the product of the charges and inversely proportional to the square of their separation, acting along the line joining them.|
+e|qa|Give the relationship for the electrostatic force between two point charges.|$F = \dfrac{1}{4\pi\varepsilon_0}\dfrac{Qq}{r^2} = \dfrac{kQq}{r^2}$, where $k$ is the Coulomb constant, supplied in the data book.|
+e|qa|How does the sign of the product $Qq$ tell you the nature of the force?|A positive product (like charges) gives repulsion; a negative product (unlike charges) gives attraction. Magnitude questions usually take absolute values and state the direction separately.|
+e|qa|Compare Coulomb's Law with the Law of Universal Gravitation.|Both are inverse square laws with the same mathematical form. Gravity is always attractive and acts on mass; the electrostatic force can attract or repel and acts on charge. The electrostatic force is enormously stronger.|
+e|qa|Define electric field strength and give its relationships.|The force per unit positive charge at a point: $E = \dfrac{F}{Q} = \dfrac{kq}{r^2}$. Units are $\text{N C}^{-1}$ (or $\text{V m}^{-1}$).|
+e|qa|How is the direction of an electric field defined?|By the direction of the force on a small positive test charge. Field lines therefore point away from positive charges and towards negative charges.|
+e|svg|Sketch the electric field lines for an isolated positive charge, an isolated negative charge, and a dipole.|Radially outward from positive, radially inward to negative. For a dipole, lines leave the positive charge and curve around to enter the negative charge. Lines never cross, and their density indicates field strength.||<svg viewBox="0 0 340 150" xmlns="http://www.w3.org/2000/svg" role="img"><g stroke="var(--signal)" stroke-width="1.4" fill="none"><circle cx="52" cy="75" r="13" stroke="currentColor"/><line x1="52" y1="62" x2="52" y2="30"/><polygon points="52,26 48,36 56,36" fill="var(--signal)" stroke="none"/><line x1="52" y1="88" x2="52" y2="120"/><polygon points="52,124 48,114 56,114" fill="var(--signal)" stroke="none"/><line x1="39" y1="75" x2="10" y2="75"/><polygon points="6,75 16,71 16,79" fill="var(--signal)" stroke="none"/><line x1="65" y1="75" x2="94" y2="75"/><polygon points="98,75 88,71 88,79" fill="var(--signal)" stroke="none"/></g><text x="47" y="80" font-size="14" font-family="monospace" fill="currentColor">+</text><g stroke="var(--signal)" stroke-width="1.4" fill="none"><circle cx="160" cy="75" r="13" stroke="currentColor"/><line x1="160" y1="30" x2="160" y2="58"/><polygon points="160,62 156,52 164,52" fill="var(--signal)" stroke="none"/><line x1="160" y1="120" x2="160" y2="92"/><polygon points="160,88 156,98 164,98" fill="var(--signal)" stroke="none"/><line x1="118" y1="75" x2="143" y2="75"/><polygon points="147,75 137,71 137,79" fill="var(--signal)" stroke="none"/><line x1="202" y1="75" x2="177" y2="75"/><polygon points="173,75 183,71 183,79" fill="var(--signal)" stroke="none"/></g><text x="156" y="80" font-size="16" font-family="monospace" fill="currentColor">-</text><g stroke="var(--signal)" stroke-width="1.4" fill="none"><circle cx="248" cy="75" r="11" stroke="currentColor"/><circle cx="318" cy="75" r="11" stroke="currentColor"/><path d="M259 75 L307 75"/><polygon points="286,75 278,71 278,79" fill="var(--signal)" stroke="none"/><path d="M252 65 Q283 25 314 65"/><polygon points="285,32 277,34 280,41" fill="var(--signal)" stroke="none"/><path d="M252 85 Q283 125 314 85"/><polygon points="285,118 280,109 277,116" fill="var(--signal)" stroke="none"/></g><text x="244" y="80" font-size="13" font-family="monospace" fill="currentColor">+</text><text x="315" y="80" font-size="15" font-family="monospace" fill="currentColor">-</text></svg>
+e|qa|Why can electric field lines never cross?|A crossing point would mean two different directions of force on a single test charge at that point, which is impossible. The field has one unique direction everywhere.|
+e|qa|What does the spacing of field lines tell you?|Closer lines mean a stronger field. Uniformly spaced parallel lines, as between charged parallel plates, indicate a uniform field of constant strength.|
+e|qa|Relate the work done moving a charge to electrical potential difference.|$V = \dfrac{\Delta U}{q}$, so the work done is $W = qV$. Potential difference is the energy transferred per coulomb of charge moved between two points.|
+e|qa|In which direction does the electric force act on a negative charge placed in a field?|Opposite to the field direction. The field is defined for a positive test charge, so negative charges are pushed the other way.|
+e|qa|What is an electronvolt?|The energy gained by one elementary charge accelerated through a potential difference of one volt. Its value in joules is numerically equal to the elementary charge, and is supplied in the data book.|
+e|qa|How are electric fields from two charges combined at a point?|By vector addition. Calculate the magnitude of each field at that point, assign directions using positive test charge logic, then add as vectors.|
+e|qa|Describe a magnetic field.|A region in which a magnetic material, a moving charge, or a current-carrying conductor experiences a force. It is a vector field, represented by field lines running from north to south outside a magnet.|
+e|qa|What produces a magnetic field?|Moving electric charge. Any charge in motion generates a magnetic field that circles its direction of travel. A current-carrying wire produces a field because it contains many charges moving together, and the field of a permanent magnet arises from electron motion within its atoms.|A stationary charge produces an electric field only. Motion is what adds the magnetic field.
+e|cloze|A stationary charge produces only an [[electric]] field. A charge in motion produces both an electric field and a [[magnetic]] field.|This is the origin of every magnetic field in the course — wires, solenoids and permanent magnets are all just moving charge at different scales.|
+e|qa|State the right-hand grip rule for a straight current-carrying wire.|Point the right thumb along the direction of conventional current. The curl of the fingers gives the direction of the circular magnetic field around the wire.|
+e|svg|Determine the field direction around these two wires: one carrying current out of the page, one into the page.|Out of the page (dot): field circles anticlockwise. Into the page (cross): field circles clockwise. Right thumb along the current, fingers curl to give the field.||<svg viewBox="0 0 320 170" xmlns="http://www.w3.org/2000/svg" role="img"><circle cx="82" cy="85" r="10" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="82" cy="85" r="3" fill="currentColor"/><g stroke="var(--signal)" stroke-width="1.5" fill="none"><circle cx="82" cy="85" r="26"/><circle cx="82" cy="85" r="44"/><polygon points="82,59 88,66 76,66" fill="var(--signal)" stroke="none"/><polygon points="82,41 88,48 76,48" fill="var(--signal)" stroke="none"/></g><text x="52" y="150" font-size="11" font-family="monospace" fill="currentColor">I out of page</text><circle cx="238" cy="85" r="10" fill="none" stroke="currentColor" stroke-width="1.6"/><line x1="231" y1="78" x2="245" y2="92" stroke="currentColor" stroke-width="1.6"/><line x1="245" y1="78" x2="231" y2="92" stroke="currentColor" stroke-width="1.6"/><g stroke="var(--signal)" stroke-width="1.5" fill="none"><circle cx="238" cy="85" r="26"/><circle cx="238" cy="85" r="44"/><polygon points="238,59 232,66 244,66" fill="var(--signal)" stroke="none"/><polygon points="238,41 232,48 244,48" fill="var(--signal)" stroke="none"/></g><text x="210" y="150" font-size="11" font-family="monospace" fill="currentColor">I into page</text></svg>
+e|qa|Give the relationship for magnetic field strength around a long straight current-carrying wire.|$B = \dfrac{\mu_0 I}{2\pi r}$, where $\mu_0$ is the permeability of free space and $r$ is the perpendicular distance from the wire.|
+e|qa|Give the relationship for the magnetic field inside a solenoid, defining every symbol.|$B = \mu_0 n I$, where $n$ is the number of turns per unit length (not the total turns) and $I$ is the current.|If given total turns $N$ and length $L$, you must use $n = N/L$ first. Substituting $N$ directly is a very common error.
+e|qa|How do you find which end of a solenoid is the north pole?|Right-hand grip rule: curl the fingers of the right hand in the direction of conventional current around the coils. The extended thumb points to the north pole, along the field inside the solenoid.|
+e|svg|Sketch the magnetic field around a bar magnet and inside a solenoid.|Outside a bar magnet, lines run from north to south and are closest together at the poles. A solenoid produces an almost identical external pattern, with a strong uniform field inside running from S to N internally.||<svg viewBox="0 0 330 160" xmlns="http://www.w3.org/2000/svg" role="img"><rect x="42" y="66" width="80" height="28" fill="none" stroke="currentColor" stroke-width="1.5"/><line x1="82" y1="66" x2="82" y2="94" stroke="currentColor" stroke-width="1.2"/><text x="56" y="86" font-size="13" font-family="monospace" fill="currentColor">N</text><text x="98" y="86" font-size="13" font-family="monospace" fill="currentColor">S</text><g stroke="var(--signal)" stroke-width="1.4" fill="none"><path d="M42 72 Q10 20 82 24 Q154 20 122 72"/><polygon points="86,24 78,20 78,28" fill="var(--signal)" stroke="none"/><path d="M42 88 Q10 140 82 136 Q154 140 122 88"/><polygon points="86,136 78,132 78,140" fill="var(--signal)" stroke="none"/></g><g stroke="currentColor" stroke-width="1.5" fill="none"><path d="M214 62 q10 -12 20 0 M234 62 q10 -12 20 0 M254 62 q10 -12 20 0 M274 62 q10 -12 20 0"/><line x1="214" y1="62" x2="214" y2="98"/><line x1="234" y1="62" x2="234" y2="98"/><line x1="254" y1="62" x2="254" y2="98"/><line x1="274" y1="62" x2="274" y2="98"/><line x1="294" y1="62" x2="294" y2="98"/></g><g stroke="var(--signal)" stroke-width="1.6" fill="none"><line x1="212" y1="80" x2="292" y2="80"/><polygon points="296,80 286,76 286,84" fill="var(--signal)" stroke="none"/></g><text x="196" y="118" font-size="11" font-family="monospace" fill="currentColor">S</text><text x="300" y="118" font-size="11" font-family="monospace" fill="currentColor">N</text></svg>
+e|qa|Give the relationship for the force on a current-carrying conductor in a magnetic field.|$F = BIL\sin\theta$, where $\theta$ is the angle between the magnetic field and the direction of the current.|
+e|qa|When is the magnetic force on a current-carrying wire zero, and when is it maximum?|Zero when the current is parallel or antiparallel to the field ($\sin 0 = 0$). Maximum when the current is perpendicular to the field ($\sin 90^\circ = 1$).|
+e|qa|Give the relationship for the magnetic force on a moving charge.|$F = qvB\sin\theta$, where $\theta$ is the angle between the velocity and the magnetic field.|A stationary charge feels no magnetic force, no matter how strong the field.
+e|qa|State Fleming's left-hand rule and say when it is used.|Used for the force on a current-carrying conductor or a moving positive charge in a magnetic field. On the left hand, held mutually perpendicular: First finger = Field, seCond finger = Current, thuMb = Motion (thrust).|
+e|svg|Set out the three mutually perpendicular quantities in Fleming's left-hand rule.|First finger — magnetic field $B$. Second finger — conventional current $I$. Thumb — force (motion). All three at right angles on the LEFT hand for the motor effect.|For a negative charge, reverse the direction you point the current finger — the electron flow is opposite to conventional current.|<svg viewBox="0 0 300 180" xmlns="http://www.w3.org/2000/svg" role="img"><g stroke="var(--signal)" stroke-width="2.2" fill="none"><line x1="120" y1="120" x2="120" y2="34"/><polygon points="120,26 114,40 126,40" fill="var(--signal)" stroke="none"/></g><g stroke="var(--phos)" stroke-width="2.2" fill="none"><line x1="120" y1="120" x2="248" y2="120"/><polygon points="256,120 242,114 242,126" fill="var(--phos)" stroke="none"/></g><g stroke="currentColor" stroke-width="2.2" fill="none"><line x1="120" y1="120" x2="48" y2="164"/><polygon points="40,168 52,156 58,166" fill="currentColor" stroke="none"/></g><text x="128" y="34" font-size="12" font-family="monospace" fill="var(--signal)">THUMB  force F</text><text x="150" y="112" font-size="12" font-family="monospace" fill="var(--phos)">2nd  current I</text><text x="26" y="146" font-size="12" font-family="monospace" fill="currentColor">1st  field B</text><text x="88" y="16" font-size="11" font-family="monospace" fill="currentColor" opacity=".7">LEFT HAND — motor effect</text></svg>
+e|qa|How is Fleming's left-hand rule applied to a negative charge such as an electron?|Point the current finger in the direction opposite to the electron's velocity, since conventional current runs opposite to electron flow. The thumb then gives the force on the electron directly.|Reverse the current finger — do not reverse the answer afterwards. Doing both cancels out and gives the wrong direction.
+e|qa|State Fleming's right-hand rule and say when it is used.|Used for the generator effect: finding the direction of induced conventional current in a conductor moved through a magnetic field. On the right hand: First finger = Field, thuMb = Motion, seCond finger = induced Current.|
+e|svg|Set out Fleming's right-hand rule for a conductor moved through a field.|Thumb — motion of the conductor. First finger — magnetic field $B$. Second finger — direction of the induced conventional current. All on the RIGHT hand.|Left hand for motors (current causes motion), right hand for generators (motion causes current).|<svg viewBox="0 0 300 180" xmlns="http://www.w3.org/2000/svg" role="img"><g stroke="currentColor" stroke-width="2.2" fill="none"><line x1="170" y1="120" x2="170" y2="34"/><polygon points="170,26 164,40 176,40" fill="currentColor" stroke="none"/></g><g stroke="var(--signal)" stroke-width="2.2" fill="none"><line x1="170" y1="120" x2="42" y2="120"/><polygon points="34,120 48,114 48,126" fill="var(--signal)" stroke="none"/></g><g stroke="var(--phos)" stroke-width="2.2" fill="none"><line x1="170" y1="120" x2="244" y2="164"/><polygon points="252,168 238,166 244,156" fill="var(--phos)" stroke="none"/></g><text x="178" y="34" font-size="12" font-family="monospace" fill="currentColor">THUMB  motion v</text><text x="46" y="112" font-size="12" font-family="monospace" fill="var(--signal)">1st  field B</text><text x="196" y="150" font-size="12" font-family="monospace" fill="var(--phos)">2nd  induced I</text><text x="140" y="16" font-size="11" font-family="monospace" fill="currentColor" opacity=".7">RIGHT HAND — generator effect</text></svg>
+e|cloze|Use the [[left]] hand when a current produces motion, and the [[right]] hand when motion produces a current.|Motors are driven by current; generators are driven by motion. Naming which effect is occurring first removes almost all hand-rule errors.|
+e|qa|Why does the magnetic force on a moving charge do no work on it?|The force is always perpendicular to the velocity, so there is no component along the direction of motion. The speed and kinetic energy stay constant while the direction changes.|
+e|qa|What path does a charged particle follow when it enters a uniform magnetic field perpendicular to its velocity?|A circular path. The magnetic force acts as the centripetal force, so $qvB = \dfrac{mv^2}{r}$, giving radius $r = \dfrac{mv}{qB}$.|
+e|qa|What do a dot and a cross represent in field diagrams?|A dot is a vector out of the page (arrow tip approaching); a cross is a vector into the page (arrow flights receding).|
+e|qa|Two parallel wires carry current in the same direction. Do they attract or repel?|They attract. Each wire sits in the other's field, and applying the grip rule then the left-hand rule gives forces pointing towards each other. Antiparallel currents repel.|
+e|qa|Interpret this result: force on a conductor in a magnetic field is plotted against current and gives a straight line through the origin.|The relationship $F = BIL\sin\theta$ is confirmed as directly proportional. The gradient equals $BL\sin\theta$, so a known length allows the field strength to be calculated.|
+e|qa|Describe how magnetic field strength varies with distance from a bar magnet.|It decreases rapidly and non-linearly with distance. Plotting field strength against distance gives a steep decaying curve, not a straight line.|
+e|qa|Define magnetic flux and give its relationship.|The amount of magnetic field passing through an area: $\Phi = BA\cos\theta$, measured in webers (Wb).|
+e|qa|In $\Phi = BA\cos\theta$, from where is the angle $\theta$ measured?|From the normal to the plane of the loop, not from the plane itself. Flux is maximum when the field is perpendicular to the loop area ($\theta = 0$) and zero when the field lies in the plane of the loop.|Measuring $\theta$ from the plane instead of the normal swaps sine and cosine and inverts the answer.
+e|qa|Define electromotive force (EMF).|The energy supplied per unit charge by a source, measured in volts. In induction it is the potential difference generated across a conductor by a changing magnetic flux.|
+e|qa|State Faraday's Law and give its relationship.|The induced EMF is proportional to the rate of change of magnetic flux linkage: $emf = -N\dfrac{\Delta\Phi}{\Delta t}$.|
+e|qa|State Lenz's Law.|An induced current flows in the direction that opposes the change in magnetic flux producing it.|
+e|qa|What does the negative sign in Faraday's Law represent?|Lenz's Law — the induced EMF acts to oppose the change that created it. It encodes direction, not magnitude.|
+e|qa|Explain how Lenz's Law is a consequence of conservation of energy.|If the induced current reinforced the change instead of opposing it, the change would grow without limit and produce energy from nothing. Opposition means work must be done against the induced effects, and that work is the source of the electrical energy.|
+e|qa|What is required for an EMF to be induced in a coil?|A change in magnetic flux through the coil. A steady flux, however large, induces nothing.|A magnet held stationary inside a coil induces no EMF at all.
+e|qa|List three ways to change the flux through a coil and induce an EMF.|Change the magnetic field strength; change the area of the loop within the field; change the orientation of the loop relative to the field. Faster changes give larger EMF.|
+e|qa|Give the relationship for the EMF induced across a conductor of length $L$ moving with velocity $v$ perpendicular to a field $B$.|$emf = BLv$, which follows from $emf = -\dfrac{N\Delta(BA_\perp)}{\Delta t}$ with the area swept per unit time equal to $Lv$.|
+e|svg|A magnet is pushed north-pole-first into a coil. Determine the direction of the induced current.|The induced current flows so that the coil face nearest the magnet becomes a north pole, repelling the approaching magnet. Applying the right-hand grip rule to that required polarity gives the current direction in the windings.|Withdrawing the magnet reverses everything — the near face becomes a south pole to attract it back.|<svg viewBox="0 0 330 150" xmlns="http://www.w3.org/2000/svg" role="img"><rect x="30" y="58" width="66" height="26" fill="none" stroke="currentColor" stroke-width="1.5"/><line x1="63" y1="58" x2="63" y2="84" stroke="currentColor" stroke-width="1.2"/><text x="42" y="77" font-size="12" font-family="monospace" fill="currentColor">S</text><text x="76" y="77" font-size="12" font-family="monospace" fill="currentColor">N</text><g stroke="var(--signal)" stroke-width="2" fill="none"><line x1="104" y1="71" x2="140" y2="71"/><polygon points="146,71 134,66 134,76" fill="var(--signal)" stroke="none"/></g><text x="104" y="56" font-size="11" font-family="monospace" fill="var(--signal)">v</text><g stroke="currentColor" stroke-width="1.6" fill="none"><ellipse cx="196" cy="71" rx="10" ry="34"/><ellipse cx="216" cy="71" rx="10" ry="34"/><ellipse cx="236" cy="71" rx="10" ry="34"/><ellipse cx="256" cy="71" rx="10" ry="34"/><line x1="196" y1="105" x2="270" y2="122"/><line x1="196" y1="37" x2="270" y2="22"/></g><text x="272" y="128" font-size="11" font-family="monospace" fill="currentColor">to meter</text><text x="176" y="140" font-size="11" font-family="monospace" fill="var(--phos)">near face becomes N</text></svg>
+e|qa|A coil rotates uniformly in a magnetic field. At what orientation is the induced EMF greatest?|When the plane of the coil is parallel to the field — that is, when the flux through it is momentarily zero. Flux is changing fastest at that instant.|Peak EMF occurs at zero flux, not at maximum flux. At maximum flux the rate of change is zero and the EMF is zero.
+e|qa|Why does a rotating coil in a uniform magnetic field produce alternating current?|As the coil rotates, the flux through it varies sinusoidally, so the rate of change of flux reverses sign twice per revolution. The induced EMF therefore alternates in direction.|
+e|qa|Explain how a transformer works.|Alternating current in the primary coil produces a continually changing magnetic flux in the iron core. That changing flux links the secondary coil, inducing an alternating EMF in it by Faraday's Law.|
+e|qa|Give the transformer relationships for voltage, turns and current.|$\dfrac{V_p}{V_s} = \dfrac{N_p}{N_s}$ for voltage and turns, and $I_pV_p = I_sV_s$ for an ideal, lossless transformer.|
+e|qa|Distinguish a step-up transformer from a step-down transformer.|A step-up transformer has more secondary turns than primary, raising voltage and lowering current. A step-down transformer does the reverse. Power is unchanged in the ideal case.|
+e|qa|Why will a transformer not operate on direct current?|Steady DC produces a constant flux in the core. With no change in flux there is no induced EMF in the secondary, so nothing is transferred.|
+e|qa|Describe an electromagnetic wave.|A self-propagating transverse wave consisting of oscillating electric and magnetic fields, perpendicular to each other and to the direction of propagation. It requires no medium and travels at the speed of light in a vacuum.|
+e|qa|Explain the relationship between oscillating charges and electromagnetic waves.|An accelerating charge produces a changing electric field, which induces a changing magnetic field, which in turn regenerates a changing electric field. The pair propagates outward as an electromagnetic wave whose frequency equals the oscillation frequency of the charge.|
+e|qa|What determines the frequency of the electromagnetic radiation emitted by an oscillating charge?|The frequency of the charge's oscillation. A charge oscillating at $f$ radiates at $f$.|
+e|qa|A conducting loop lies in a uniform field that is increasing. What is the direction of the induced current?|It flows so that its own magnetic field inside the loop opposes the increasing external field. Apply the right-hand grip rule to that required internal field direction to obtain the current direction in the loop.|
+e|calc|The number of turns on a coil is doubled while the rate of flux change is unchanged. What happens to the induced EMF?|It doubles. $emf \propto N$ in Faraday's Law.|
+e|calc|The current in a long straight wire is halved. What happens to the magnetic field strength at a fixed distance?|It halves. $B \propto I$ for a straight wire.|
+e|calc|A charge moves parallel to a magnetic field. What is the magnetic force on it?|Zero, because $\sin 0^\circ = 0$ in $F = qvB\sin\theta$.|
+e|qa|Distinguish the roles of the right-hand grip rule and Fleming's left-hand rule.|The grip rule finds the magnetic field produced by a current. The left-hand rule finds the force experienced by a current already sitting in an external field. Many problems need the grip rule first, then the left-hand rule.|
+e|qa|How does the electric field between two parallel charged plates behave?|It is uniform in the central region — constant in magnitude and direction — with field lines straight, parallel and evenly spaced, running from the positive to the negative plate.|
+e|qa|What is the work done moving a charge perpendicular to an electric field?|Zero. There is no displacement along the direction of the force, so no work is done and the potential is unchanged.|
+e|qa|Compare the strength of the electric field at a point due to a charge if the distance is halved.|The field becomes four times stronger, since $E \propto 1/r^2$.|
+e|qa|Compare the mathematical form of $E = \dfrac{kq}{r^2}$ and $g = \dfrac{GM}{r^2}$.|Both are inverse square field relationships defined as force per unit of the relevant property — per unit charge for electric fields, per unit mass for gravitational fields.|
+e|qa|What is magnetic flux density, and what are its units?|Another name for magnetic field strength $B$: the flux per unit area perpendicular to the field. Units are tesla (T), equivalent to $\text{Wb m}^{-2}$.|
+r|qa|Give two observations that classical physics cannot explain but special relativity can.|The detection of muons at the Earth's surface despite their short half-life, and the fact that particles in accelerators gain momentum without their speed exceeding $c$.|
+r|qa|Define a frame of reference.|A coordinate system, with an origin and a clock, relative to which positions, times and motions are measured.|
+r|qa|Define an inertial frame of reference.|A frame moving at constant velocity, in which Newton's first law holds. It is not accelerating or rotating.|
+r|qa|State the first postulate of special relativity.|The laws of physics are the same in all inertial frames of reference. No experiment can identify an absolute state of rest.|
+r|qa|State the second postulate of special relativity.|The speed of light in a vacuum is the same for all observers, regardless of the motion of the source or the observer.|
+r|qa|Why can motion only ever be measured relative to an observer?|Because no inertial frame is privileged. Every observer is entitled to consider themselves at rest, so velocity has meaning only as a relationship between two frames.|
+r|qa|Explain the concept of simultaneity in special relativity.|Two events simultaneous in one inertial frame are generally not simultaneous in another frame moving relative to it. Simultaneity depends on the observer.|
+r|qa|Give an example illustrating the relativity of simultaneity.|Light flashes from the centre of a moving train carriage. In the train frame the light reaches both ends together. In the platform frame the rear wall moves towards the light and the front wall away, so the rear is struck first.|
+r|qa|Define proper time interval.|The time between two events measured in the frame where both events occur at the same place — the frame at rest relative to the events. It is the shortest time any observer will measure.|
+r|qa|Define relativistic time interval.|The time between two events measured by an observer moving relative to the events. It is always longer than the proper time.|
+r|qa|Give the time dilation relationship.|$t = \dfrac{t_0}{\sqrt{1 - \dfrac{v^2}{c^2}}}$, where $t_0$ is the proper time interval.|
+r|qa|What is the Lorentz factor, and what values can it take?|$\gamma = \dfrac{1}{\sqrt{1 - v^2/c^2}}$. It is always at least 1, equals 1 at $v = 0$, and rises without limit as $v \to c$.|
+r|cloze|Moving clocks are observed to run [[slow]], and moving objects are observed to be [[contracted]] along the direction of motion.|Both effects follow from the constancy of $c$ and are reciprocal — each observer sees the other's clock running slow.|
+r|qa|Define proper length.|The length of an object measured in the frame in which it is at rest. It is the longest length any observer will measure.|
+r|qa|Give the length contraction relationship.|$L = L_0\sqrt{1 - \dfrac{v^2}{c^2}}$, where $L_0$ is the proper length.|
+r|qa|In which direction does length contraction act?|Only along the direction of relative motion. Dimensions perpendicular to the motion are unchanged.|
+r|qa|How do you identify which observer measures the proper time interval?|The one for whom both events occur at the same location — typically the observer travelling with the clock, particle or spacecraft.|Confusing proper and dilated time inverts the calculation. Ask where the events happen, not who is moving.
+r|qa|How do you identify which observer measures the proper length?|The one at rest relative to the object being measured. A spacecraft's proper length is measured by its crew, not by an observer watching it fly past.|
+r|qa|Define rest mass.|The mass of an object measured in its own rest frame. It is invariant — every observer agrees on it.|
+r|qa|Give the relationship for relativistic momentum.|$p_v = \dfrac{m_0v}{\sqrt{1 - \dfrac{v^2}{c^2}}}$, which reduces to $p = m_0v$ at low speeds.|
+r|qa|What are the implications of relativistic momentum increasing as an object approaches the speed of light?|Momentum rises without limit as $v \to c$, so ever greater impulse produces ever smaller speed gains. Infinite energy would be needed to reach $c$, so no object with mass can attain it.|
+r|qa|State the mass–energy equivalence relationship and explain what it means.|$\Delta E = \Delta mc^2$. Mass and energy are interchangeable forms of the same quantity; a change in mass corresponds to a proportional change in energy.|
+r|qa|Describe the twins paradox.|One twin travels at relativistic speed and returns while the other stays on Earth. Each initially appears to see the other's clock run slow, yet the traveller returns younger.|
+r|qa|How is the twins paradox resolved?|The situation is not symmetric. The travelling twin must accelerate to turn around, so they change inertial frames and are not entitled to a single consistent inertial view. The stay-at-home twin remains in one inertial frame and ages more.|
+r|qa|Describe the ladder in the barn paradox.|A ladder longer than a barn is carried through at relativistic speed. In the barn frame the ladder contracts and momentarily fits with both doors shut. In the ladder frame the barn contracts, so it clearly cannot fit.|
+r|qa|How is the ladder in the barn paradox resolved?|By the relativity of simultaneity. The two door closings are simultaneous in the barn frame but not in the ladder frame, where the far door opens before the near door closes. Neither observer is wrong.|
+r|qa|Describe the flashlights on a train scenario.|Light is emitted from a moving train. Both the passenger and the trackside observer measure the light travelling at exactly $c$, not $c$ plus or minus the train's speed. Velocities do not simply add for light.|
+r|qa|Explain the detection of muons at the Earth's surface using special relativity.|Created high in the atmosphere, muons should decay long before reaching the ground at classical speeds. From Earth's frame their lifetime is dilated, so they survive the trip; from the muon's frame the distance to the ground is contracted. Both descriptions agree on the outcome.|
+r|qa|Give experimental evidence for time dilation.|Atomic clocks flown around the world (Hafele–Keating) disagreed with stationary clocks by the predicted amount, and the survival of atmospheric muons matches relativistic prediction rather than classical.|
+r|calc|What is the Lorentz factor at $v = 0.8c$?|$\gamma = \dfrac{1}{\sqrt{1 - 0.64}} = \dfrac{1}{0.6} = 1.67$.|
+r|calc|At what speed is the Lorentz factor exactly 2?|$v = 0.866c$, since $\sqrt{1 - v^2/c^2} = 0.5$ requires $v^2/c^2 = 0.75$.|
+r|calc|A spacecraft passes at $0.6c$ ($\gamma = 1.25$). A 10 m rod on board lies along the direction of motion. What length does Earth measure?|8 m. $L = L_0/\gamma = 10/1.25$.|
+r|qa|Why are relativistic effects not noticed in everyday life?|At everyday speeds $v^2/c^2$ is vanishingly small, so $\gamma \approx 1$ and the relativistic relationships reduce to their classical forms.|
+r|qa|Are time dilation and length contraction reciprocal?|Yes, between inertial frames. Each observer measures the other's clocks as slow and the other's lengths as contracted. The symmetry breaks only when one observer accelerates.|
+r|qa|Could information be transmitted faster than light?|No. Doing so would allow effects to precede causes in some inertial frames, breaking causality, and any object carrying that information would require infinite energy to accelerate to $c$.|
+r|svg|Explain how a light clock demonstrates time dilation.|At rest, light bounces straight up and down over distance $d$. When the clock moves, the observer sees the light travel a longer diagonal path. Since $c$ is the same for both, the moving clock must take longer per tick — time is dilated.||<svg viewBox="0 0 320 170" xmlns="http://www.w3.org/2000/svg" role="img"><g stroke="currentColor" stroke-width="1.6" fill="none"><line x1="30" y1="30" x2="86" y2="30"/><line x1="30" y1="130" x2="86" y2="130"/></g><g stroke="var(--signal)" stroke-width="2" fill="none"><line x1="58" y1="128" x2="58" y2="34"/><polygon points="58,28 54,40 62,40" fill="var(--signal)" stroke="none"/></g><text x="24" y="152" font-size="11" font-family="monospace" fill="currentColor">at rest: t0</text><g stroke="currentColor" stroke-width="1.6" fill="none"><line x1="170" y1="30" x2="226" y2="30"/><line x1="170" y1="130" x2="226" y2="130"/><line x1="250" y1="30" x2="306" y2="30" opacity=".4"/><line x1="250" y1="130" x2="306" y2="130" opacity=".4"/></g><g stroke="var(--signal)" stroke-width="2" fill="none"><line x1="198" y1="128" x2="272" y2="34"/><polygon points="276,28 268,38 274,42" fill="var(--signal)" stroke="none"/></g><g stroke="var(--phos)" stroke-width="1.6" fill="none"><line x1="198" y1="146" x2="266" y2="146"/><polygon points="272,146 262,142 262,150" fill="var(--phos)" stroke="none"/></g><text x="212" y="162" font-size="11" font-family="monospace" fill="var(--phos)">v</text><text x="160" y="18" font-size="11" font-family="monospace" fill="currentColor">moving: longer path, same c</text></svg>
+r|svg|Describe the shape of a graph of the Lorentz factor against speed.|It starts at $\gamma = 1$ for $v = 0$, rises very slowly for most of the range, then climbs steeply and asymptotically towards infinity as $v$ approaches $c$. Relativistic effects are negligible until roughly $0.1c$.||<svg viewBox="0 0 300 190" xmlns="http://www.w3.org/2000/svg" role="img"><line x1="40" y1="160" x2="270" y2="160" stroke="currentColor" stroke-width="1.4"/><line x1="40" y1="160" x2="40" y2="20" stroke="currentColor" stroke-width="1.4"/><path d="M40 148 C110 146 175 138 215 118 C244 102 256 66 260 20" fill="none" stroke="var(--signal)" stroke-width="2.2"/><line x1="264" y1="160" x2="264" y2="20" stroke="currentColor" stroke-width="1.2" stroke-dasharray="4 4" opacity=".7"/><text x="252" y="176" font-size="11" font-family="monospace" fill="currentColor">c</text><text x="14" y="152" font-size="11" font-family="monospace" fill="currentColor">1</text><text x="8" y="16" font-size="11" font-family="monospace" fill="currentColor">gam</text><text x="140" y="180" font-size="11" font-family="monospace" fill="currentColor">v</text></svg>
+r|qa|Why is the speed of light the maximum possible speed in the universe?|Relativistic momentum and energy diverge as $v \to c$, so accelerating any mass to $c$ would demand infinite energy. Only massless entities such as photons travel at exactly $c$.|
+r|qa|What happens to the relativistic relationships as $v$ becomes very small compared with $c$?|The square root approaches 1, so $t \to t_0$, $L \to L_0$ and $p \to m_0v$. Special relativity contains classical mechanics as a low-speed limit.|
+r|qa|Which is greater: proper time or relativistic time interval?|The relativistic time interval. Proper time is always the shortest measurement of the interval between two events.|
+r|qa|Which is greater: proper length or relativistic length?|Proper length. A moving object is always measured as shorter than its rest length.|
+r|qa|Is rest mass frame dependent?|No. Rest mass is invariant, agreed on by all observers. It is the momentum and energy that vary between frames.|
+r|qa|Explain why an observer inside a smoothly moving sealed carriage cannot determine their speed.|The first postulate: all inertial frames obey identical physical laws. No internal experiment can distinguish uniform motion from rest, so speed is only meaningful relative to something outside.|
+q|qa|Explain how the double slit experiment provides evidence for the wave model of light.|Light passing through two narrow slits produces a pattern of alternating bright and dark fringes. This requires superposition — constructive interference where waves arrive in phase, destructive where out of phase — which particles cannot produce.|
+q|qa|Describe light as an electromagnetic wave.|A transverse wave of oscillating electric and magnetic fields, perpendicular to each other and to the direction of travel, propagating through a vacuum at the speed of light, with $c = f\lambda$.|
+q|qa|Explain the concept of black-body radiation.|An idealised object that absorbs all incident radiation and re-emits a characteristic continuous spectrum determined only by its temperature. Higher temperatures shift the peak to shorter wavelengths and increase total emission.|
+q|qa|Give Wien's displacement relationship.|$\lambda_{max} = \dfrac{b}{T}$, where $b$ is Wien's constant and $T$ is the absolute temperature in kelvin.|Temperature must be in kelvin, not degrees Celsius.
+q|qa|What was the ultraviolet catastrophe, and how was it resolved?|Classical theory predicted black-body emission would rise without limit at short wavelengths, contradicting observation. Planck resolved it by proposing that energy is emitted in discrete quanta of size $hf$, which suppresses high-frequency emission.|
+q|qa|Give the relationship for the energy of a photon.|$E = hf = \dfrac{hc}{\lambda}$, where $h$ is Planck's constant.|
+q|qa|Describe the photoelectric effect.|When light of sufficiently high frequency strikes a metal surface, electrons are ejected immediately. Below a threshold frequency no electrons are emitted, no matter how intense the light or how long it shines.|
+q|qa|Define threshold frequency.|The minimum frequency of incident light that will eject electrons from a given surface. Below it, no photon carries enough energy to free an electron.|
+q|qa|Define work function.|The minimum energy required to remove an electron from the surface of a metal: $W = hf_0$. It is a property of the metal.|
+q|qa|Give the photoelectric equation and explain each term.|$E_k = hf - W$. The photon energy $hf$ is absorbed; $W$ is spent escaping the surface; the remainder is the maximum kinetic energy of the emitted electron.|
+q|qa|What happens to the photoelectric current and the electron kinetic energy when light intensity increases at fixed frequency?|Current increases, because more photons arrive and eject more electrons per second. Maximum kinetic energy is unchanged, because it depends only on photon frequency.|Intensity changes how many, frequency changes how energetic. This distinction is the whole point of the experiment.
+q|qa|Give three features of the photoelectric effect that the wave model of light cannot explain.|The existence of a threshold frequency; the immediate emission with no time delay at low intensity; and the fact that maximum kinetic energy depends on frequency rather than intensity.|
+q|qa|What is a photon?|A discrete quantum of electromagnetic energy, massless, travelling at $c$, carrying energy $hf$. Light interacts with matter as individual photons even though it propagates as a wave.|
+q|qa|What is stopping voltage in a photoelectric experiment?|The reverse potential difference just large enough to prevent the most energetic photoelectrons reaching the collector. It gives the maximum kinetic energy directly, since $E_{k,max} = eV_s$.|
+q|svg|A graph of maximum photoelectron kinetic energy against frequency is plotted. What do the gradient and the two intercepts represent?|Gradient = Planck's constant $h$. The $x$-intercept is the threshold frequency $f_0$. The $y$-intercept is $-W$, the negative of the work function. The line is straight, and different metals give parallel lines offset horizontally.|The gradient is the same for every metal — only the intercepts change. A different gradient means an experimental error.|<svg viewBox="0 0 310 200" xmlns="http://www.w3.org/2000/svg" role="img"><line x1="30" y1="120" x2="285" y2="120" stroke="currentColor" stroke-width="1.4"/><line x1="30" y1="30" x2="30" y2="180" stroke="currentColor" stroke-width="1.4"/><line x1="100" y1="120" x2="265" y2="42" stroke="var(--signal)" stroke-width="2.4"/><line x1="30" y1="152" x2="100" y2="120" stroke="var(--signal)" stroke-width="1.6" stroke-dasharray="4 3" opacity=".8"/><circle cx="100" cy="120" r="3.5" fill="var(--signal)"/><circle cx="30" cy="152" r="3.5" fill="var(--signal)"/><text x="86" y="138" font-size="11" font-family="monospace" fill="currentColor">f0</text><text x="1" y="156" font-size="11" font-family="monospace" fill="currentColor">-W</text><text x="180" y="60" font-size="11" font-family="monospace" fill="var(--phos)">gradient = h</text><text x="240" y="138" font-size="11" font-family="monospace" fill="currentColor">f</text><text x="36" y="26" font-size="11" font-family="monospace" fill="currentColor">Ek max</text></svg>
+q|qa|Describe Rutherford's model of the atom.|A very small, dense, positively charged nucleus containing almost all the mass, with electrons occupying the mostly empty space around it, based on the alpha particle scattering results.|
+q|qa|Why did Rutherford's model fail?|Orbiting electrons are accelerating charges, so classically they must radiate energy continuously and spiral into the nucleus. The model predicts unstable atoms and a continuous emission spectrum, neither of which is observed.|
+q|qa|State Bohr's postulates for the hydrogen atom.|Electrons occupy only certain allowed stationary orbits in which they do not radiate; angular momentum in those orbits is quantised as $mvr = \dfrac{nh}{2\pi}$; and a photon of energy $hf$ equal to the energy difference is emitted or absorbed when an electron changes orbit.|
+q|qa|How does Bohr's model explain the specific wavelengths in the hydrogen line spectrum?|Only certain electron energy states exist, so transitions between them release photons of only certain fixed energies. Since $E = hf$, only particular frequencies and wavelengths appear, producing discrete lines rather than a continuum.|
+q|qa|Give the standing wave condition for a Bohr orbit.|$n\lambda = 2\pi r$ — a whole number of de Broglie wavelengths must fit around the circumference, otherwise the electron wave interferes destructively with itself.|
+q|qa|Give the Rydberg relationship for hydrogen spectral lines.|$\dfrac{1}{\lambda} = R\left(\dfrac{1}{n_f^2} - \dfrac{1}{n_i^2}\right)$, where $R$ is the Rydberg constant and $n_f < n_i$.|
+q|qa|Distinguish an emission spectrum from an absorption spectrum.|An emission spectrum shows bright lines where excited electrons drop to lower levels and release photons. An absorption spectrum shows dark lines at those same wavelengths, where photons of exactly the right energy have been absorbed from a continuous source.|
+q|svg|Interpret this hydrogen energy level diagram. Which transition emits the highest energy photon?|The transition with the largest energy gap — here $n = 4$ down to $n = 1$. Photon energy equals the difference between levels, so $E = hf = E_i - E_f$. Downward transitions emit; upward transitions require absorption.|Levels get closer together as $n$ increases, so high-$n$ transitions produce low-energy photons.|<svg viewBox="0 0 320 190" xmlns="http://www.w3.org/2000/svg" role="img"><g stroke="currentColor" stroke-width="1.6"><line x1="70" y1="160" x2="250" y2="160"/><line x1="70" y1="90" x2="250" y2="90"/><line x1="70" y1="56" x2="250" y2="56"/><line x1="70" y1="40" x2="250" y2="40"/></g><text x="44" y="164" font-size="11" font-family="monospace" fill="currentColor">n=1</text><text x="44" y="94" font-size="11" font-family="monospace" fill="currentColor">n=2</text><text x="44" y="60" font-size="11" font-family="monospace" fill="currentColor">n=3</text><text x="44" y="44" font-size="11" font-family="monospace" fill="currentColor">n=4</text><text x="256" y="164" font-size="10" font-family="monospace" fill="currentColor">-13.6 eV</text><text x="256" y="94" font-size="10" font-family="monospace" fill="currentColor">-3.40 eV</text><text x="256" y="60" font-size="10" font-family="monospace" fill="currentColor">-1.51 eV</text><text x="256" y="44" font-size="10" font-family="monospace" fill="currentColor">-0.85 eV</text><g stroke="var(--signal)" stroke-width="2"><line x1="110" y1="42" x2="110" y2="152"/><polygon points="110,158 106,146 114,146" fill="var(--signal)" stroke="none"/></g><g stroke="var(--phos)" stroke-width="2"><line x1="180" y1="58" x2="180" y2="82"/><polygon points="180,88 176,76 184,76" fill="var(--phos)" stroke="none"/></g><text x="116" y="112" font-size="10" font-family="monospace" fill="var(--signal)">largest gap</text><text x="186" y="78" font-size="10" font-family="monospace" fill="var(--phos)">small gap</text></svg>
+q|qa|What is ionisation energy in the Bohr model?|The energy needed to raise an electron from a given level to $n = \infty$, freeing it from the atom. On an energy level diagram it is the gap from the occupied level up to the $n = \infty$ line.|
+q|qa|Give the de Broglie relationship.|$\lambda = \dfrac{h}{p}$ — every particle with momentum has an associated wavelength.|
+q|qa|What experimental evidence supports the wave nature of matter?|Electron diffraction. A beam of electrons passed through a crystal lattice or thin film produces a diffraction pattern of concentric rings, exactly as waves do.|
+q|qa|Summarise wave–particle duality for light.|Wave evidence: interference, diffraction, polarisation. Particle evidence: the photoelectric effect and black-body radiation. Neither model alone is sufficient — the model used depends on the interaction being described.|
+q|qa|Which model of light explains diffraction, and which explains the photoelectric effect?|Diffraction requires the wave model; the photoelectric effect requires the particle (photon) model. This is the core of wave–particle duality.|
+q|qa|Give the momentum of a photon.|$p = \dfrac{h}{\lambda} = \dfrac{E}{c}$. A photon carries momentum despite having no rest mass.|
+q|qa|What is a limitation of the Bohr model?|It accurately predicts only hydrogen and other one-electron ions. It does not explain the spectra of multi-electron atoms, line intensities, or fine structure, and it arbitrarily imposes quantisation rather than deriving it.|
+q|calc|The frequency of incident light on a photoelectric surface is doubled. Does the maximum kinetic energy of emitted electrons double?|No. $E_k = hf - W$, so kinetic energy increases by $hf$ but the constant work function is still subtracted. Only the photon energy doubles.|
+q|calc|Two photons: one red, one blue. Which has the greater energy and which has the greater wavelength?|Blue has greater energy (higher frequency); red has the greater wavelength. $E = hc/\lambda$ makes energy and wavelength inversely related.|
+q|cloze|In the photoelectric effect, one photon interacts with one [[electron]], transferring [[all]] of its energy in a single event.|This one-to-one interaction explains why the effect is instantaneous and why sub-threshold photons cannot accumulate to eject an electron.|
+q|qa|Why is the photoelectric effect immediate even at very low light intensity?|Because energy arrives in whole quanta. A single photon carries enough energy to release an electron the instant it is absorbed; there is no need to accumulate energy over time as a wave model would require.|
+q|qa|What is meant by a stationary state in Bohr's model?|An allowed electron orbit in which the electron has a fixed energy and does not radiate, despite being accelerated. Radiation occurs only during transitions between such states.|
+q|qa|How does the spacing of hydrogen energy levels change as $n$ increases?|The levels converge — the energy gaps become progressively smaller, approaching zero at the ionisation limit. Emitted photons from high-$n$ transitions therefore have low energy and long wavelength.|
+q|qa|What is the significance of the evidence provided by black-body radiation?|It could not be explained by classical continuous energy, and forced the introduction of quantised energy. This was the origin of quantum theory.|
+q|qa|Interpret this photoelectric result: no current flows despite very bright light on the cathode.|The light frequency is below the threshold frequency for that metal. Individual photons lack the work function energy, and intensity cannot compensate.|
+s|qa|What is an elementary particle?|A particle with no known internal structure — it is not made of anything smaller. Quarks, leptons and the gauge bosons are elementary; protons and neutrons are not.|
+s|qa|Describe the properties of an antiparticle.|It has the same mass and lifetime as its particle, but opposite sign for charge, baryon number and lepton number. A particle meeting its antiparticle annihilates, producing photons.|
+s|qa|Name the six types of quark.|Up, down, charm, strange, top, bottom.|
+s|qa|What are the charges of the quarks?|Up, charm and top carry $+\tfrac{2}{3}e$. Down, strange and bottom carry $-\tfrac{1}{3}e$. Antiquarks carry the opposite sign.|
+s|qa|Define a baryon and give its quark composition.|A hadron made of three quarks. Protons and neutrons are baryons, and every baryon has baryon number $B = +1$.|
+s|qa|Define a meson and give its quark composition.|A hadron made of one quark and one antiquark. Mesons have baryon number zero and are generally unstable. Pions are the common example.|
+s|qa|What is a hadron?|Any particle made of quarks and therefore experiencing the strong nuclear force. Hadrons divide into baryons (three quarks) and mesons (quark–antiquark pairs).|
+s|qa|Give the quark composition of a proton and a neutron.|Proton: up, up, down (uud), total charge $+1$. Neutron: up, down, down (udd), total charge 0.|
+s|qa|Name the six leptons.|Electron, muon, tau, and their three corresponding neutrinos: electron neutrino, muon neutrino, tau neutrino.|
+s|qa|How are quarks and leptons organised into generations?|Three generations of increasing mass. First: up, down, electron, electron neutrino. Second: charm, strange, muon, muon neutrino. Third: top, bottom, tau, tau neutrino. Ordinary matter uses only the first generation.|
+s|qa|Name the four gauge bosons and the interaction each mediates.|Gluon — strong nuclear force. Photon — electromagnetic force. W boson and Z boson — weak nuclear force.|
+s|qa|What is a gauge boson?|A force-carrying particle exchanged between matter particles to mediate a fundamental interaction. They have integer spin, unlike quarks and leptons.|
+s|qa|Compare the strong nuclear, weak nuclear and electromagnetic forces.|Strong: mediated by gluons, acts on quarks only, strongest, but acting only over a range comparable to the size of a nucleus. Electromagnetic: mediated by photons, acts on all charged particles, infinite range. Weak: mediated by W and Z bosons, acts on all quarks and leptons, extremely short range, responsible for beta decay.|
+s|qa|Contrast the fundamental forces experienced by quarks and leptons.|Quarks experience all of them — strong, weak, electromagnetic and gravitational. Leptons do not experience the strong nuclear force. Neutral leptons (neutrinos) also do not experience the electromagnetic force.|
+s|cloze|Leptons never experience the [[strong nuclear]] force, which is why they are never found bound inside hadrons.|This is the defining distinction between the two families of matter particles.|
+s|qa|Give the relationships for baryon number.|$B = n_b - n_{\bar{b}}$ counted over baryons, or $B = \dfrac{1}{3}(n_q - n_{\bar{q}})$ counted over quarks. Baryon number is conserved in all interactions.|
+s|qa|Give the relationship for lepton number.|$L = n_l - n_{\bar{l}}$. Leptons have $L = +1$, antileptons $L = -1$, and all other particles $L = 0$. Lepton number is conserved.|
+s|qa|What quantities must be conserved in any particle interaction?|Charge, baryon number, lepton number, and energy–momentum. An interaction that violates any of these cannot occur.|
+s|qa|Write the equation for neutron decay and identify the particles.|$n \rightarrow p + e^- + \bar{\nu}_e$. A neutron becomes a proton, an electron, and an electron antineutrino. This is beta-minus decay.|
+s|qa|Why must an antineutrino, not a neutrino, be produced in beta-minus decay?|To conserve lepton number. The electron has $L = +1$, and the initial neutron has $L = 0$, so an antineutrino with $L = -1$ is required to balance.|
+s|qa|Describe beta-minus decay at the quark level.|A down quark converts into an up quark, emitting a $W^-$ boson which decays into an electron and an electron antineutrino. The neutron (udd) therefore becomes a proton (uud).|
+s|qa|Describe beta-plus decay at the quark level.|An up quark converts into a down quark, emitting a $W^+$ boson which decays into a positron and an electron neutrino. A proton within the nucleus becomes a neutron.|
+s|svg|Interpret this particle interaction diagram for neutron decay.|Time runs to the right. The neutron enters, a down quark emits a $W^-$ boson and becomes an up quark, converting the neutron to a proton. The $W^-$ then decays into an electron and an electron antineutrino.|Arrows pointing backwards in time indicate antiparticles — that is how the antineutrino is identified.|<svg viewBox="0 0 320 180" xmlns="http://www.w3.org/2000/svg" role="img"><g stroke="currentColor" stroke-width="1.8" fill="none"><line x1="30" y1="130" x2="140" y2="130"/><line x1="140" y1="130" x2="250" y2="130"/></g><polygon points="92,130 84,126 84,134" fill="currentColor"/><polygon points="200,130 192,126 192,134" fill="currentColor"/><path d="M140 130 q6 -18 12 -30 q6 -12 12 -24" stroke="var(--signal)" stroke-width="1.8" fill="none" stroke-dasharray="5 4"/><g stroke="currentColor" stroke-width="1.8" fill="none"><line x1="164" y1="76" x2="250" y2="46"/><line x1="164" y1="76" x2="250" y2="98"/></g><polygon points="214,60 204,60 209,68" fill="currentColor"/><polygon points="200,80 210,86 210,78" fill="currentColor"/><circle cx="140" cy="130" r="3.5" fill="currentColor"/><circle cx="164" cy="76" r="3.5" fill="currentColor"/><text x="34" y="150" font-size="11" font-family="monospace" fill="currentColor">n (udd)</text><text x="206" y="150" font-size="11" font-family="monospace" fill="currentColor">p (uud)</text><text x="256" y="46" font-size="11" font-family="monospace" fill="currentColor">e-</text><text x="256" y="102" font-size="11" font-family="monospace" fill="currentColor">anti-v</text><text x="146" y="92" font-size="11" font-family="monospace" fill="var(--signal)">W-</text><text x="30" y="172" font-size="10" font-family="monospace" fill="currentColor" opacity=".7">time</text><line x1="52" y1="168" x2="110" y2="168" stroke="currentColor" stroke-width="1"/><polygon points="116,168 106,164 106,172" fill="currentColor"/></svg>
+s|svg|Interpret this diagram of electron–positron annihilation.|An electron and a positron meet at a vertex and annihilate, producing a virtual photon which then produces a new particle–antiparticle pair. Charge, lepton number and energy are all conserved through the vertex.||<svg viewBox="0 0 320 170" xmlns="http://www.w3.org/2000/svg" role="img"><g stroke="currentColor" stroke-width="1.8" fill="none"><line x1="34" y1="40" x2="120" y2="85"/><line x1="34" y1="130" x2="120" y2="85"/><line x1="200" y1="85" x2="286" y2="40"/><line x1="200" y1="85" x2="286" y2="130"/></g><polygon points="86,67 76,66 82,74" fill="currentColor"/><polygon points="76,104 86,103 80,96" fill="currentColor"/><polygon points="240,62 250,58 246,66" fill="currentColor"/><polygon points="246,104 236,108 240,100" fill="currentColor"/><path d="M120 85 q10 -9 20 0 q10 9 20 0 q10 -9 20 0 q10 9 20 0" stroke="var(--signal)" stroke-width="1.8" fill="none"/><circle cx="120" cy="85" r="3.5" fill="currentColor"/><circle cx="200" cy="85" r="3.5" fill="currentColor"/><text x="8" y="36" font-size="11" font-family="monospace" fill="currentColor">e-</text><text x="8" y="142" font-size="11" font-family="monospace" fill="currentColor">e+</text><text x="290" y="36" font-size="11" font-family="monospace" fill="currentColor">q</text><text x="288" y="142" font-size="11" font-family="monospace" fill="currentColor">anti-q</text><text x="142" y="70" font-size="11" font-family="monospace" fill="var(--signal)">photon</text></svg>
+s|svg|Interpret this electron–electron interaction diagram.|Two electrons approach, exchange a virtual photon at the two vertices, and recoil apart. The exchanged photon is the mediator of the electromagnetic repulsion between them.||<svg viewBox="0 0 300 170" xmlns="http://www.w3.org/2000/svg" role="img"><g stroke="currentColor" stroke-width="1.8" fill="none"><line x1="30" y1="30" x2="120" y2="55"/><line x1="120" y1="55" x2="270" y2="30"/><line x1="30" y1="140" x2="120" y2="115"/><line x1="120" y1="115" x2="270" y2="140"/></g><polygon points="80,44 70,42 76,50" fill="currentColor"/><polygon points="200,42 190,44 196,50" fill="currentColor"/><polygon points="80,126 70,128 76,120" fill="currentColor"/><polygon points="200,128 190,126 196,120" fill="currentColor"/><path d="M120 55 q9 10 0 20 q-9 10 0 20 q9 10 0 20" stroke="var(--signal)" stroke-width="1.8" fill="none"/><circle cx="120" cy="55" r="3.5" fill="currentColor"/><circle cx="120" cy="115" r="3.5" fill="currentColor"/><text x="8" y="26" font-size="11" font-family="monospace" fill="currentColor">e-</text><text x="8" y="152" font-size="11" font-family="monospace" fill="currentColor">e-</text><text x="130" y="90" font-size="11" font-family="monospace" fill="var(--signal)">virtual photon</text><text x="24" y="166" font-size="10" font-family="monospace" fill="currentColor" opacity=".7">time to the right</text></svg>
+s|qa|In a particle interaction diagram, what do the axes and arrow directions represent?|One axis is time (conventionally to the right) and the other is space. Arrows pointing forward in time indicate particles; arrows pointing backward in time indicate antiparticles.|
+s|qa|What happens at a vertex in a particle interaction diagram?|An interaction occurs and a force-carrying boson is emitted or absorbed. All conservation rules — charge, baryon number, lepton number — must hold at every vertex.|
+s|qa|Explain how symmetry in particle interactions maintains the principles of conservation.|Interactions are symmetric under the combined operations of charge conjugation (C), parity (P) and time reversal (T). Applying all three to a valid interaction produces another valid interaction, and the conserved quantities — charge, baryon number and lepton number — balance in both.|
+s|qa|What do C, P and T stand for in particle interactions?|Charge conjugation (C): replace every particle with its antiparticle. Parity (P): invert the spatial coordinates, giving a mirror image. Time reversal (T): run the interaction backwards in time.|
+s|qa|Apply C symmetry to beta-minus decay $n \rightarrow p + e^- + \bar{\nu}_e$. What interaction results?|Every particle is replaced by its antiparticle: $\bar{n} \rightarrow \bar{p} + e^+ + \nu_e$. Charge, baryon number and lepton number each balance in the new interaction as they did in the original.|
+s|qa|How does time reversal symmetry relate a decay to another interaction?|Reversing the arrow turns the products back into the reactants, so a decay becomes a capture and an emission becomes an absorption. The same conserved quantities balance in either direction.|
+s|qa|Give the quark composition of an antiproton.|Two anti-up quarks and one anti-down quark, with total charge $-1$ and baryon number $-1$.|
+s|qa|Give the quark composition of a positive pion.|An up quark and an anti-down quark, giving charge $+1$ and baryon number 0.|
+s|qa|Determine whether this interaction is permitted by the conservation rules: $p \rightarrow n + e^+ + \nu_e$|Check each conserved quantity. Charge: $+1 \rightarrow 0 + 1 + 0$, balanced. Baryon number: $+1 \rightarrow +1 + 0 + 0$, balanced. Lepton number: $0 \rightarrow 0 - 1 + 1$, balanced. All three are conserved, so the interaction is permitted.|
+s|qa|How do you check whether a proposed particle interaction can occur?|Total charge, baryon number and lepton number must each be equal before and after. If any one of the three fails to balance, the interaction cannot occur.|
+s|qa|What are the lepton numbers of an electron, a positron, a neutrino and an antineutrino?|Electron $+1$, positron $-1$, neutrino $+1$, antineutrino $-1$.|
+s|qa|Calculate the baryon number of a meson using the quark relationship.|$B = \tfrac{1}{3}(n_q - n_{\bar{q}}) = \tfrac{1}{3}(1 - 1) = 0$. A meson contains one quark and one antiquark.|
+s|qa|Calculate the baryon number of a proton using the quark relationship.|$B = \tfrac{1}{3}(3 - 0) = +1$. Three quarks and no antiquarks.|
+s|qa|Why must charge be conserved in a particle interaction?|Because interactions are symmetric under charge conjugation. No observed interaction has ever violated charge conservation, and any proposed interaction that does not balance charge is rejected.|
+s|qa|Distinguish elementary particles from composite particles, giving examples.|Elementary particles have no substructure — quarks, leptons and gauge bosons. Composite particles are built from them — protons, neutrons, pions and all other hadrons.|
+s|qa|Which fundamental force is responsible for beta decay, and which boson mediates it?|The weak nuclear force, mediated by the $W$ bosons. It is the only interaction that can change one flavour of quark into another.|
+d|qa|What is absolute uncertainty, and how is it written?|The uncertainty expressed in the same units as the measurement, stated as a range: $12.4 \pm 0.2$ cm. It gives the interval within which the true value is expected to lie.|
+d|qa|Give the relationship for percentage uncertainty.|$\text{percentage uncertainty} = \dfrac{\text{absolute uncertainty}}{\text{measurement}} \times 100\%$|
+d|qa|Give the relationship for the absolute uncertainty of a mean.|$\Delta\bar{x} = \pm\dfrac{(x_{max} - x_{min})}{2}$ — half the range of the repeated measurements.|
+d|qa|How is uncertainty propagated when quantities are added or subtracted?|Add the absolute uncertainties. This applies to subtraction as well as addition — uncertainty always grows, never cancels.|
+d|qa|How is uncertainty propagated when quantities are multiplied or divided?|Add the percentage uncertainties, then convert back to an absolute uncertainty at the end if required.|
+d|qa|How is uncertainty propagated when a quantity is raised to a power?|Multiply the percentage uncertainty by the exponent. Squaring a quantity doubles its percentage uncertainty; cubing triples it.|
+d|calc|A length is $4.0 \pm 0.2$ m. What is the percentage uncertainty in its area if the shape is a square?|The length has 5% uncertainty. Area involves the square, so the percentage uncertainty is $2 \times 5\% = 10\%$.|
+d|calc|Two masses, $250 \pm 5$ g and $180 \pm 3$ g, are subtracted. What is the uncertainty in the difference?|$\pm 8$ g. Absolute uncertainties are added for subtraction, giving $70 \pm 8$ g.|Subtracting the uncertainties is a common error. Uncertainty never decreases through a calculation.
+d|qa|Give the relationship for percentage error.|$\text{percentage error} = \left\lvert\dfrac{\text{measured} - \text{true}}{\text{true}}\right\rvert \times 100\%$ — the absolute value bars mean the sign is discarded and the result is always positive.|
+d|qa|Discriminate between absolute uncertainty and percentage error.|Absolute uncertainty describes the precision of the measurement itself, derived from the instrument and the spread of repeats. Percentage error describes accuracy — how far the result sits from an accepted or theoretical value. A result can have small uncertainty and large error.|A tight cluster of readings far from the true value has low uncertainty and high percentage error. This is the signature of systematic error.
+d|qa|Define random error.|Unpredictable variation that scatters repeated measurements above and below the true value. Its causes include fluctuating conditions and limits on reading an instrument.|
+d|qa|Define systematic error.|A consistent bias that shifts every measurement in the same direction by a similar amount. It arises from the experimental design or the equipment, such as an instrument that does not read zero with no load.|Repeats will not reveal or reduce it — it survives averaging untouched.
+d|qa|Define precision.|The closeness of repeated measurements to one another. High precision means low scatter and a small uncertainty, regardless of whether the result is correct.|
+d|qa|Define accuracy.|The closeness of a measurement to the true or accepted value. High accuracy means low percentage error.|
+d|svg|Classify each of these four target patterns for accuracy and precision.|Top left: precise and accurate — tightly grouped on the centre. Top right: precise but not accurate — tightly grouped, offset, indicating systematic error. Bottom left: accurate but not precise — widely scattered but centred on average, indicating random error. Bottom right: neither.||<svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg" role="img"><g stroke="currentColor" fill="none" stroke-width="1.3"><circle cx="72" cy="66" r="38"/><circle cx="72" cy="66" r="22"/><circle cx="72" cy="66" r="8"/><circle cx="212" cy="66" r="38"/><circle cx="212" cy="66" r="22"/><circle cx="212" cy="66" r="8"/><circle cx="72" cy="212" r="38"/><circle cx="72" cy="212" r="22"/><circle cx="72" cy="212" r="8"/><circle cx="212" cy="212" r="38"/><circle cx="212" cy="212" r="22"/><circle cx="212" cy="212" r="8"/></g><g fill="var(--signal)"><circle cx="70" cy="64" r="3.4"/><circle cx="75" cy="68" r="3.4"/><circle cx="71" cy="70" r="3.4"/><circle cx="196" cy="44" r="3.4"/><circle cx="201" cy="48" r="3.4"/><circle cx="197" cy="50" r="3.4"/><circle cx="48" cy="192" r="3.4"/><circle cx="94" cy="216" r="3.4"/><circle cx="70" cy="236" r="3.4"/><circle cx="82" cy="190" r="3.4"/><circle cx="182" cy="182" r="3.4"/><circle cx="196" cy="192" r="3.4"/><circle cx="176" cy="200" r="3.4"/><circle cx="204" cy="176" r="3.4"/></g><text x="20" y="122" font-size="10" font-family="monospace" fill="currentColor">precise + accurate</text><text x="162" y="122" font-size="10" font-family="monospace" fill="currentColor">precise only</text><text x="24" y="268" font-size="10" font-family="monospace" fill="currentColor">accurate only</text><text x="176" y="268" font-size="10" font-family="monospace" fill="currentColor">neither</text></svg>
+d|qa|How many significant figures should a result of a multiplication or division carry?|The same number as the input value with the fewest significant figures.|
+d|qa|How many decimal places should a result of an addition or subtraction carry?|The same number as the input value with the fewest decimal places.|
+d|qa|To how many significant figures should an uncertainty normally be quoted?|One significant figure, with the measurement then rounded to the same decimal place: $12.47 \pm 0.03$, not $12.472 \pm 0.031$.|
+d|svg|How are minimum and maximum lines of best fit used to find the uncertainty in a gradient?|Draw the steepest and shallowest straight lines that still pass through all the error bars. The uncertainty in the gradient is half the difference between them: $\Delta m = \dfrac{m_{max} - m_{min}}{2}$. The same method applied to the intercepts gives intercept uncertainty.||<svg viewBox="0 0 300 200" xmlns="http://www.w3.org/2000/svg" role="img"><line x1="36" y1="170" x2="280" y2="170" stroke="currentColor" stroke-width="1.3"/><line x1="36" y1="170" x2="36" y2="20" stroke="currentColor" stroke-width="1.3"/><g stroke="currentColor" stroke-width="1.5"><line x1="76" y1="132" x2="76" y2="156"/><line x1="70" y1="132" x2="82" y2="132"/><line x1="70" y1="156" x2="82" y2="156"/><line x1="132" y1="104" x2="132" y2="128"/><line x1="126" y1="104" x2="138" y2="104"/><line x1="126" y1="128" x2="138" y2="128"/><line x1="188" y1="72" x2="188" y2="96"/><line x1="182" y1="72" x2="194" y2="72"/><line x1="182" y1="96" x2="194" y2="96"/><line x1="244" y1="42" x2="244" y2="66"/><line x1="238" y1="42" x2="250" y2="42"/><line x1="238" y1="66" x2="250" y2="66"/></g><g fill="currentColor"><circle cx="76" cy="144" r="2.6"/><circle cx="132" cy="116" r="2.6"/><circle cx="188" cy="84" r="2.6"/><circle cx="244" cy="54" r="2.6"/></g><line x1="52" y1="160" x2="266" y2="46" stroke="var(--signal)" stroke-width="2"/><line x1="52" y1="152" x2="266" y2="38" stroke="var(--phos)" stroke-width="1.5" stroke-dasharray="5 4"/><line x1="52" y1="166" x2="266" y2="58" stroke="var(--phos)" stroke-width="1.5" stroke-dasharray="5 4"/><text x="196" y="34" font-size="10" font-family="monospace" fill="var(--phos)">max</text><text x="238" y="80" font-size="10" font-family="monospace" fill="var(--phos)">min</text></svg>
+d|qa|An object falls from rest. What should be plotted to linearise the data, and what does the gradient represent?|Plot displacement $s$ against $t^2$. Since $s = \tfrac{1}{2}at^2$, the gradient equals $\tfrac{1}{2}a$, so acceleration is twice the gradient.|
+d|qa|Orbital data is collected for several satellites. What should be plotted to produce a straight line, and what is the gradient?|Plot $T^2$ against $r^3$. From Kepler's third law the gradient is $\dfrac{4\pi^2}{GM}$, which yields the mass of the central body.|
+d|qa|How should a line of best fit be drawn?|As a single smooth straight line or curve passing as close as possible to all points, with roughly equal numbers above and below. It should never be drawn dot to dot, and it need not pass through any particular data point.|
+d|qa|Distinguish interpolation from extrapolation, and say which is more reliable.|Interpolation reads a value within the measured range; extrapolation projects beyond it. Interpolation is more reliable, because extrapolation assumes the relationship continues to hold where it has not been tested.|
+d|qa|When can a set of data not be treated as a linear function?|When the points show clear systematic curvature, or when the residuals about a straight line follow a pattern rather than scattering randomly. In those cases a curve of best fit or linearisation is required.|
+d|qa|How do you calculate a gradient from a graph, and what must accompany the value?|Take two widely separated points on the line of best fit, not raw data points, and compute rise over run. The gradient must be given with the units implied by the two axes.|
+d|qa|How does measurement uncertainty influence conclusions?|If the uncertainty ranges of two results overlap, they cannot be claimed to be different. Uncertainty sets the limit on how strongly any conclusion can be stated.|
+d|qa|An experiment is repeated many times with very consistent results, but the mean sits well away from the accepted value. What does this indicate?|A systematic error. High precision with low accuracy points to a consistent bias in the equipment or method, which further repeats will not fix.|
+</script>
+<script>
+(function () {
+  "use strict";
+
+  var KEY = "qcaa.physics34.deck.v1";
+  var DAY = 86400000;
+  var INTERVALS = [0, 1, 3, 7, 16]; // days until next review, by box 1..5
+
+  var TOPICS = [
+    { k: "g", label: "Gravity + motion", unit: "U3" },
+    { k: "e", label: "Electromagnetism", unit: "U3" },
+    { k: "r", label: "Special relativity", unit: "U4" },
+    { k: "q", label: "Quantum theory", unit: "U4" },
+    { k: "s", label: "Standard Model", unit: "U4" },
+    { k: "d", label: "Data + uncertainty", unit: "IA" }
+  ];
+  var TMAP = {};
+  TOPICS.forEach(function (t) { TMAP[t.k] = t; });
+
+  // ---------- deck ----------
+  var raw = document.getElementById("deck").textContent.split("\n");
+  var DECK = [];
+  raw.forEach(function (line, i) {
+    if (!line.trim()) return;
+    var f = line.split("|");
+    if (f.length < 4) return;
+    DECK.push({
+      id: "c" + i,
+      topic: f[0].trim(),
+      type: f[1].trim(),
+      q: f[2],
+      a: f[3],
+      note: (f[4] || "").trim(),
+      svg: (f[5] || "").trim()
+    });
+  });
+
+  // ---------- state ----------
+  var state = load();
+
+  function load() {
+    var blank = { box: {}, due: {}, streak: 0, lastDay: null, filter: "all", flags: {} };
+    try {
+      var s = JSON.parse(localStorage.getItem(KEY));
+      if (!s || typeof s !== "object") return blank;
+      s.box = s.box || {}; s.due = s.due || {};
+      s.streak = s.streak || 0;
+      s.lastDay = s.lastDay || null;
+      s.filter = s.filter || "all";
+      s.flags = s.flags || {};
+      return s;
+    } catch (e) { return blank; }
+  }
+  function save() {
+    try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) {}
+  }
+  function boxOf(c) { return state.box[c.id] || 1; }
+  function dueAt(c) { return state.due[c.id] || 0; }
+  function today() {
+    var d = new Date(); d.setHours(0, 0, 0, 0); return d.getTime();
+  }
+
+  // ---------- session ----------
+  var queue = [], current = null, revealed = false, studyAhead = false;
+
+  function pool() {
+    return DECK.filter(function (c) {
+      return state.filter === "all" || c.topic === state.filter;
+    });
+  }
+  function buildQueue() {
+    var now = Date.now();
+    var p = pool().filter(function (c) { return studyAhead || dueAt(c) <= now; });
+    // due-first, then lowest box, then shuffled within
+    shuffle(p);
+    p.sort(function (a, b) { return boxOf(a) - boxOf(b); });
+    queue = p;
+  }
+  function shuffle(a) {
+    for (var i = a.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var t = a[i]; a[i] = a[j]; a[j] = t;
+    }
+    return a;
+  }
+
+  function grade(correct) {
+    if (!current) return;
+    var b = boxOf(current);
+    var nb = correct ? Math.min(5, b + 1) : 1;
+    state.box[current.id] = nb;
+    state.due[current.id] = Date.now() + INTERVALS[nb - 1] * DAY;
+    bumpStreak();
+    save();
+    pulseSlot(nb);
+    if (!correct) queue.push(current); // see it again this session
+    queue.shift();
+    next();
+  }
+
+  function bumpStreak() {
+    var t = today();
+    if (state.lastDay === t) return;
+    state.streak = (state.lastDay === t - DAY) ? state.streak + 1 : 1;
+    state.lastDay = t;
+    paintStreak();
+  }
+
+  function next() {
+    current = queue[0] || null;
+    revealed = false;
+    paint();
+  }
+
+  // ---------- maths ----------
+  var GREEK = {
+    theta: "\u03B8", lambda: "\u03BB", mu: "\u03BC", pi: "\u03C0", Delta: "\u0394",
+    delta: "\u03B4", phi: "\u03C6", Phi: "\u03A6", varepsilon: "\u03B5",
+    epsilon: "\u03B5", gamma: "\u03B3", nu: "\u03BD", alpha: "\u03B1", beta: "\u03B2",
+    eta: "\u03B7", omega: "\u03C9", Omega: "\u03A9", rho: "\u03C1", sigma: "\u03C3",
+    times: "\u00D7", pm: "\u00B1", approx: "\u2248", propto: "\u221D",
+    rightarrow: "\u2192", leftarrow: "\u2190", perp: "\u22A5", infty: "\u221E",
+    cdot: "\u00B7", circ: "\u00B0", parallel: "\u2225", lvert: "|", rvert: "|",
+    ge: "\u2265", le: "\u2264", neq: "\u2260", to: "\u2192"
+  };
+
+  // Plain-text fallback if the KaTeX CDN is unreachable (blocked school network).
+  function plainMath(s) {
+    return s.replace(/\$([^$]+)\$/g, function (_, m) {
+      var x = m;
+      for (var i = 0; i < 4; i++) {
+        x = x.replace(/\\[dt]?frac\{([^{}]*)\}\{([^{}]*)\}/g, "($1)/($2)");
+      }
+      x = x.replace(/\\sqrt\[([^\]]*)\]\{([^{}]*)\}/g, "$1\u221A($2)");
+      x = x.replace(/\\sqrt\{([^{}]*)\}/g, "\u221A($1)");
+      x = x.replace(/\\text\{([^{}]*)\}/g, "$1");
+      x = x.replace(/\\bar\{([^{}]*)\}/g, "$1\u0304");
+      x = x.replace(/\\(left|right)/g, "");
+      x = x.replace(/\\([a-zA-Z]+)/g, function (mm, name) {
+        return GREEK[name] !== undefined ? GREEK[name] : name;
+      });
+      x = x.replace(/\^\{([^{}]*)\}/g, "<sup>$1</sup>").replace(/\^(-?\w)/g, "<sup>$1</sup>");
+      x = x.replace(/_\{([^{}]*)\}/g, "<sub>$1</sub>").replace(/_(\w)/g, "<sub>$1</sub>");
+      x = x.replace(/[{}]/g, "");
+      return "<i>" + x + "</i>";
+    });
+  }
+
+  var katexReady = (typeof window.renderMathInElement === "function" && typeof window.katex === "object");
+
+  function setMath(el, html) {
+    if (katexReady) {
+      el.innerHTML = html;
+      try {
+        window.renderMathInElement(el, {
+          delimiters: [{ left: "$", right: "$", display: false }],
+          throwOnError: false
+        });
+      } catch (e) { el.innerHTML = plainMath(html); }
+    } else {
+      el.innerHTML = plainMath(html);
+    }
+  }
+
+  function clozeFront(s) {
+    return s.replace(/\[\[([^\]]+)\]\]/g, '<span class="blank"></span>');
+  }
+  function clozeBack(s) {
+    return s.replace(/\[\[([^\]]+)\]\]/g, '<span class="filled">$1</span>');
+  }
+
+  // ---------- render ----------
+  var stage = document.getElementById("stage");
+  var controls = document.getElementById("controls");
+  var slotsEl = document.getElementById("slots");
+  var filtersEl = document.getElementById("filters");
+
+  function paintFilters() {
+    filtersEl.innerHTML = "";
+    var list = [{ k: "all", label: "All topics", unit: "" }].concat(TOPICS);
+    list.forEach(function (t) {
+      var b = document.createElement("button");
+      b.className = "chip";
+      b.type = "button";
+      b.setAttribute("aria-pressed", state.filter === t.k ? "true" : "false");
+      b.textContent = (t.unit ? t.unit + " " : "") + t.label;
+      b.addEventListener("click", function () {
+        state.filter = t.k; studyAhead = false; save();
+        paintFilters(); buildQueue(); next();
+      });
+      filtersEl.appendChild(b);
+    });
+  }
+
+  function paintSlots() {
+    var counts = [0, 0, 0, 0, 0];
+    pool().forEach(function (c) { counts[boxOf(c) - 1]++; });
+    var total = pool().length || 1;
+    slotsEl.innerHTML = "";
+    for (var i = 0; i < 5; i++) {
+      var d = document.createElement("div");
+      d.className = "slot";
+      d.setAttribute("data-b", i + 1);
+      d.innerHTML =
+        '<div class="fill" style="height:' + Math.round((counts[i] / total) * 100) + '%"></div>' +
+        '<div class="lab">' + (i === 4 ? "LEARNT" : "B" + (i + 1)) + "</div>" +
+        '<div class="n">' + counts[i] + "</div>";
+      slotsEl.appendChild(d);
+    }
+  }
+  function pulseSlot(n) {
+    var el = slotsEl.children[n - 1];
+    if (!el) return;
+    el.classList.remove("pulse");
+    void el.offsetWidth;
+    el.classList.add("pulse");
+  }
+
+  function paintStreak() {
+    document.getElementById("streakN").textContent = state.streak;
+    document.getElementById("streak").classList.toggle("live", state.lastDay === today() && state.streak > 0);
+  }
+
+  function nextDueText() {
+    var p = pool(), soonest = Infinity;
+    p.forEach(function (c) { var d = dueAt(c); if (d < soonest) soonest = d; });
+    if (soonest === Infinity) return "nothing scheduled";
+    var mins = Math.round((soonest - Date.now()) / 60000);
+    if (mins <= 0) return "due now";
+    if (mins < 90) return "next in " + mins + " min";
+    var hrs = Math.round(mins / 60);
+    if (hrs < 36) return "next in " + hrs + " h";
+    return "next in " + Math.round(hrs / 24) + " days";
+  }
+
+  function paint() {
+    paintSlots();
+    paintFlagBar();
+    var now = Date.now();
+    var dueCount = pool().filter(function (c) { return dueAt(c) <= now; }).length;
+    document.getElementById("dueLine").textContent = dueCount + " due of " + pool().length;
+
+    if (!current) {
+      stage.innerHTML =
+        '<div class="empty"><h2>All caught up</h2><p>Every card in this selection has been reviewed and scheduled. ' +
+        "Come back later, or keep going now — cards reviewed early still count.</p></div>";
+      controls.innerHTML = "";
+      var b = document.createElement("button");
+      b.className = "btn ghost";
+      b.textContent = "Keep going anyway";
+      b.addEventListener("click", function () { studyAhead = true; buildQueue(); next(); });
+      controls.appendChild(b);
+      document.getElementById("counter").textContent = nextDueText();
+      return;
+    }
+
+    var c = current;
+    var t = TMAP[c.topic] || { label: c.topic, unit: "" };
+    var card = document.createElement("div");
+    card.className = "card";
+
+    var meta = document.createElement("div");
+    meta.className = "meta";
+    meta.innerHTML = '<span class="topic">' + t.unit + " \u00B7 " + t.label + "</span>" +
+      '<span class="box">Box ' + boxOf(c) + " of 5</span>";
+    card.appendChild(meta);
+
+    var q = document.createElement("div");
+    q.className = "q";
+    setMath(q, revealed ? clozeBack(c.q) : clozeFront(c.q));
+    card.appendChild(q);
+
+    if (c.svg) {
+      var fig = document.createElement("div");
+      fig.className = "fig";
+      fig.innerHTML = c.svg;
+      card.appendChild(fig);
+    }
+
+    if (revealed) {
+      var a = document.createElement("div");
+      a.className = "a";
+      setMath(a, c.a);
+      card.appendChild(a);
+      if (c.note) {
+        var n = document.createElement("div");
+        n.className = "note";
+        var inner = document.createElement("span");
+        setMath(inner, c.note);
+        n.innerHTML = "<b>Watch for</b>";
+        n.appendChild(inner);
+        card.appendChild(n);
+      }
+    }
+    card.appendChild(Object.assign(document.createElement("div"), { className: "spacer" }));
+
+    var fl = document.createElement("button");
+    fl.type = "button";
+    fl.className = "flagbtn" + (state.flags[c.id] ? " on" : "");
+    fl.textContent = state.flags[c.id] ? "\u2691 Flagged as wrong" : "\u2690 Flag this card";
+    fl.title = "Mark this card as wrong or confusing so it can be reviewed";
+    fl.addEventListener("click", function (ev) {
+      ev.stopPropagation();
+      if (state.flags[c.id]) { delete state.flags[c.id]; }
+      else { state.flags[c.id] = { q: c.q.slice(0, 160), t: c.topic, at: new Date().toISOString().slice(0, 10) }; }
+      save(); paint();
+    });
+    card.appendChild(fl);
+
+    stage.innerHTML = "";
+    stage.appendChild(card);
+
+    controls.innerHTML = "";
+    if (!revealed) {
+      var show = document.createElement("button");
+      show.className = "btn";
+      show.innerHTML = "Show answer <kbd>space</kbd>";
+      show.addEventListener("click", reveal);
+      controls.appendChild(show);
+    } else {
+      var g = document.createElement("div");
+      g.className = "grade";
+      var miss = document.createElement("button");
+      miss.className = "btn miss";
+      miss.innerHTML = "Missed <kbd>1</kbd>";
+      miss.addEventListener("click", function () { grade(false); });
+      var got = document.createElement("button");
+      got.className = "btn got";
+      got.innerHTML = "Got it <kbd>2</kbd>";
+      got.addEventListener("click", function () { grade(true); });
+      g.appendChild(miss); g.appendChild(got);
+      controls.appendChild(g);
+    }
+
+    document.getElementById("counter").textContent =
+      queue.length + (queue.length === 1 ? " card left" : " cards left") +
+      (studyAhead ? " \u00B7 ahead of schedule" : "");
+  }
+
+  function reveal() {
+    if (!current || revealed) return;
+    var card = stage.querySelector(".card");
+    if (card) card.classList.add("flipping");
+    setTimeout(function () { revealed = true; paint(); }, 130);
+  }
+
+  // ---------- events ----------
+  document.addEventListener("keydown", function (e) {
+    if (e.target.tagName === "INPUT" || e.target.tagName === "TEXTAREA") return;
+    if (e.key === " " || e.key === "Enter") {
+      if (!revealed && current) { e.preventDefault(); reveal(); }
+    } else if (revealed && (e.key === "1")) { grade(false); }
+    else if (revealed && (e.key === "2")) { grade(true); }
+  });
+
+  function flagCount() { return Object.keys(state.flags || {}).length; }
+
+  function paintFlagBar() {
+    var n = flagCount(), el = document.getElementById("flagBtn");
+    el.textContent = n ? "Send " + n + " flagged card" + (n === 1 ? "" : "s") : "";
+    el.style.display = n ? "" : "none";
+  }
+
+  document.getElementById("flagBtn").addEventListener("click", function () {
+    var lines = Object.keys(state.flags).map(function (id) {
+      var f = state.flags[id];
+      return id + "\t" + f.t + "\t" + f.at + "\t" + f.q.replace(/\s+/g, " ");
+    });
+    var body = "Flagged flashcards (" + lines.length + ")\n\n" + lines.join("\n");
+    if (navigator.share) {
+      navigator.share({ title: "Flagged Physics flashcards", text: body }).catch(function () {});
+    } else if (navigator.clipboard) {
+      navigator.clipboard.writeText(body).then(function () {
+        alert("Copied " + lines.length + " flagged card(s). Paste them into an email to your teacher.");
+      });
+    } else {
+      prompt("Copy this and send it to your teacher:", body);
+    }
+  });
+
+  document.getElementById("shuffleBtn").addEventListener("click", function () {
+    shuffle(queue); next();
+  });
+
+  document.getElementById("resetBtn").addEventListener("click", function () {
+    if (!confirm("Reset all progress? Every card returns to Box 1 and the streak clears. This cannot be undone.")) return;
+    state = { box: {}, due: {}, streak: 0, lastDay: null, filter: state.filter, flags: {} };
+    save(); studyAhead = false;
+    paintStreak(); buildQueue(); next();
+  });
+
+  // ---------- start ----------
+  paintFilters();
+  paintStreak();
+  paintFlagBar();
+  buildQueue();
+  next();
+})();
+</script>
+</body>
+</html>
