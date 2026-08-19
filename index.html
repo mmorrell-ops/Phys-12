@@ -143,6 +143,10 @@ body{
 .empty h2{font-family:var(--sans);font-size:17px;text-transform:uppercase;letter-spacing:.06em;margin:0 0 8px}
 .empty p{color:var(--ink-soft);font-size:15px;margin:0 auto 16px;max-width:44ch}
 .empty .btn{max-width:280px;margin:0 auto}
+.colophon{margin-top:26px;padding-top:12px;border-top:1px solid var(--rule);
+  font-family:var(--mono);font-size:10.5px;line-height:1.65;color:var(--ink-faint);letter-spacing:.01em}
+.colophon a{color:var(--ink-soft)}
+.colophon p{margin:0 0 5px}
 
 @media (min-width:620px){
   .wrap{padding:24px 20px 56px}
@@ -182,6 +186,20 @@ body{
     <button class="mini" id="shuffleBtn">Shuffle</button>
     <button class="mini danger" id="resetBtn">Reset progress</button>
   </div>
+
+  <footer class="colophon">
+    <p>Derived from the Physics 2025 v1.3 General senior syllabus.
+       &copy; State of Queensland (QCAA) 2026
+       <a href="https://www.qcaa.qld.edu.au/copyright" rel="noopener">www.qcaa.qld.edu.au/copyright</a>,
+       used under <a href="https://creativecommons.org/licenses/by/4.0" rel="noopener">CC BY 4.0</a>.
+       QCAA has not endorsed, reviewed or been involved in this resource.</p>
+    <p>Card content drafted with AI assistance from the syllabus, checked against the Unit&nbsp;3 and Unit&nbsp;4
+       subject matter, and read in full before release. Covers science understanding and selected data-analysis
+       skills; Science as a Human Endeavour is deliberately excluded.</p>
+    <p>Software released under the MIT Licence. Progress is stored in this browser only &mdash; nothing is
+       transmitted, collected or shared.</p>
+  </footer>
+
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous"></script>
